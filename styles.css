@@ -239,6 +239,8 @@ p {
 }
 
 .band,
+.agents,
+.faq-section,
 .resources,
 .funnel,
 .split-section {
@@ -279,6 +281,7 @@ p {
 
 .intro-grid span,
 .timeline span,
+.agent-kicker span,
 .resource-type {
   color: var(--clay);
   font-size: 0.76rem;
@@ -295,6 +298,7 @@ p {
 
 .intro-grid p,
 .timeline p,
+.agent-panel p,
 .resource-card p,
 .split-copy p,
 .funnel-copy p,
@@ -357,6 +361,66 @@ p {
   color: rgba(255, 253, 248, 0.72);
 }
 
+.agents {
+  background: var(--paper);
+}
+
+.agent-layout {
+  display: grid;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.agent-panel {
+  min-height: 440px;
+  padding: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: 0 16px 46px rgba(35, 61, 53, 0.08);
+}
+
+.agent-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 42px;
+}
+
+.agent-kicker strong {
+  color: var(--forest);
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.agent-panel h3 {
+  margin-bottom: 16px;
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 3vw, 2.45rem);
+}
+
+.agent-stack {
+  display: flex;
+  width: min(1180px, 100%);
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px auto 0;
+}
+
+.agent-stack span {
+  border: 1px solid rgba(35, 61, 53, 0.18);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: var(--paper-deep);
+  color: var(--forest);
+  font-size: 0.83rem;
+  font-weight: 800;
+}
+
 .timeline {
   display: grid;
   width: min(1180px, 100%);
@@ -413,6 +477,37 @@ p {
   color: var(--forest);
   font-weight: 800;
   border-bottom: 2px solid var(--clay);
+}
+
+.faq-section {
+  background: var(--paper-deep);
+}
+
+.faq-grid {
+  display: grid;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.faq-prompt {
+  min-height: 104px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  background: var(--white);
+  color: var(--forest);
+  font: inherit;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.faq-prompt:hover {
+  border-color: rgba(182, 111, 79, 0.62);
+  transform: translateY(-2px);
 }
 
 .funnel {
@@ -514,6 +609,145 @@ input[type="email"] {
   margin-bottom: 16px;
 }
 
+.faq-agent {
+  position: fixed;
+  right: clamp(16px, 3vw, 28px);
+  bottom: clamp(16px, 3vw, 28px);
+  z-index: 30;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 12px;
+  width: min(390px, calc(100vw - 32px));
+  pointer-events: none;
+}
+
+.faq-toggle,
+.faq-agent-panel {
+  pointer-events: auto;
+}
+
+.faq-toggle {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  border: 1px solid rgba(255, 253, 248, 0.3);
+  border-radius: 999px;
+  padding: 0 18px;
+  background: var(--forest);
+  color: var(--white);
+  box-shadow: var(--shadow);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.faq-agent-panel {
+  overflow: hidden;
+  border: 1px solid rgba(23, 33, 29, 0.18);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.faq-agent-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.faq-agent-header .eyebrow {
+  margin-bottom: 8px;
+}
+
+.faq-agent-header h2 {
+  font-size: 1.35rem;
+}
+
+.faq-close {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--forest);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.faq-messages {
+  display: grid;
+  max-height: 330px;
+  gap: 10px;
+  overflow-y: auto;
+  padding: 18px;
+}
+
+.message {
+  width: fit-content;
+  max-width: 88%;
+  border-radius: 8px;
+  padding: 11px 13px;
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.message.bot {
+  background: var(--paper-deep);
+  color: var(--ink);
+}
+
+.message.user {
+  justify-self: end;
+  background: var(--forest);
+  color: var(--white);
+}
+
+.faq-form {
+  padding: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.faq-form label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.faq-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.faq-input-row input {
+  min-width: 0;
+  flex: 1;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 12px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+
+.faq-input-row .button {
+  min-height: 46px;
+  padding-inline: 15px;
+}
+
 @media (max-width: 900px) {
   .site-header {
     align-items: flex-start;
@@ -533,6 +767,8 @@ input[type="email"] {
   .intro-grid,
   .resource-grid,
   .timeline,
+  .agent-layout,
+  .faq-grid,
   .split-section,
   .funnel,
   .site-footer {
@@ -545,6 +781,10 @@ input[type="email"] {
 
   .booking-panel {
     grid-column: auto;
+  }
+
+  .faq-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -568,10 +808,29 @@ input[type="email"] {
   }
 
   .intro-grid article,
+  .agent-panel,
   .resource-card,
   .capture-form,
   .booking-panel {
     padding: 24px;
+  }
+
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .faq-agent {
+    right: 12px;
+    bottom: 12px;
+    width: calc(100vw - 24px);
+  }
+
+  .faq-messages {
+    max-height: 280px;
+  }
+
+  .faq-input-row {
+    flex-direction: column;
   }
 
   .split-image,
