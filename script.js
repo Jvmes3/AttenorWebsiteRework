@@ -40,21 +40,6 @@ const faqAnswers = [
     answer:
       "Use the booking section to enter your first name and work email. The first call is a useful conversation about fit, urgency, and possible next steps.",
   },
-  {
-    keywords: ["content", "agent", "calendar", "caption", "post", "sources"],
-    answer:
-      "The Content Agent runs on recurring Tuesday and Thursday content days, reads the event brief, researches current sources, and saves a caption, post body, and source links to its Google Drive folder.",
-  },
-  {
-    keywords: ["email", "gmail", "outlook", "inbox", "summary", "tasks", "label"],
-    answer:
-      "The Email Agent runs at 6:30 AM, reviews Gmail and Outlook, labels new messages, extracts tasks and deadlines, and emails one summary showing the sender, inbox source, priority, and required action.",
-  },
-  {
-    keywords: ["drive", "google", "tools", "claude"],
-    answer:
-      "The proposed automation stack includes Google Calendar, web search, Claude AI, Google Drive, Gmail, and Outlook. Drive output is organized with one folder per agent.",
-  },
 ];
 
 captureForm?.addEventListener("submit", (event) => {
@@ -104,7 +89,7 @@ function getFaqAnswer(question) {
     return bestMatch.answer;
   }
 
-  return "I can help with Attenor Collaborative services, downloadable resources, discovery calls, and the Content Agent or Email Agent proposal. Try asking about one of those.";
+  return "I can help with Attenor Collaborative services, downloadable resources, and discovery calls. Try asking about one of those.";
 }
 
 function askFaqAgent(question) {
