@@ -64,7 +64,7 @@ a {
 
 .brand-mark {
   display: grid;
-  width: 42px;
+  width: 46px;
   height: 42px;
   place-items: center;
   border: 1px solid var(--forest);
@@ -72,7 +72,7 @@ a {
   background: var(--forest);
   color: var(--paper);
   font-family: var(--serif);
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 
@@ -243,6 +243,7 @@ p {
 .faq-section,
 .resources,
 .funnel,
+.about-section,
 .split-section {
   padding: clamp(72px, 10vw, 130px) clamp(20px, 5vw, 72px);
 }
@@ -263,6 +264,57 @@ p {
   background: var(--paper);
 }
 
+.about-section {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1fr);
+  gap: clamp(32px, 7vw, 84px);
+  align-items: center;
+  background: var(--white);
+}
+
+.about-media {
+  min-height: 560px;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(135deg, rgba(35, 61, 53, 0.88), rgba(125, 146, 127, 0.58)),
+    url("https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&w=1200&q=82");
+  background-position: center;
+  background-size: cover;
+}
+
+.portrait-placeholder {
+  display: grid;
+  height: 100%;
+  min-height: 560px;
+  place-items: end start;
+  padding: 34px;
+  color: var(--white);
+}
+
+.portrait-placeholder span {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  font-weight: 700;
+}
+
+.about-copy {
+  max-width: 790px;
+}
+
+.about-copy h2 {
+  margin-bottom: 24px;
+}
+
+.about-copy p:not(.eyebrow) {
+  color: var(--muted);
+  margin-top: 18px;
+}
+
+.about-copy .about-signature {
+  color: var(--forest);
+  font-weight: 800;
+}
+
 .intro-grid {
   display: grid;
   width: min(1180px, 100%);
@@ -273,7 +325,7 @@ p {
 }
 
 .intro-grid article {
-  min-height: 310px;
+  min-height: 390px;
   padding: 32px;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -291,7 +343,7 @@ p {
 }
 
 .intro-grid h3 {
-  margin: 58px 0 16px;
+  margin: 48px 0 16px;
   font-family: var(--serif);
   font-size: 1.6rem;
 }
@@ -301,6 +353,7 @@ p {
 .agent-panel p,
 .resource-card p,
 .split-copy p,
+.about-copy p,
 .funnel-copy p,
 .booking-panel p,
 .site-footer p {
@@ -537,7 +590,8 @@ p {
   font-weight: 800;
 }
 
-input[type="email"] {
+input[type="email"],
+input[type="text"] {
   flex: 1 1 240px;
   min-height: 48px;
   width: 100%;
@@ -549,10 +603,14 @@ input[type="email"] {
   font: inherit;
 }
 
-.checkbox-row {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
+.capture-form label:not(:first-child) {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+
+.consent-note {
   margin-top: 18px;
   color: var(--muted);
   font-size: 0.94rem;
@@ -769,6 +827,7 @@ input[type="email"] {
   .timeline,
   .agent-layout,
   .faq-grid,
+  .about-section,
   .split-section,
   .funnel,
   .site-footer {
@@ -834,7 +893,9 @@ input[type="email"] {
   }
 
   .split-image,
-  .split-image img {
+  .split-image img,
+  .about-media,
+  .portrait-placeholder {
     min-height: 360px;
   }
 }

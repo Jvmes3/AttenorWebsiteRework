@@ -18,50 +18,52 @@ const faqAnswers = [
   {
     keywords: ["foresight", "scenario", "future", "futures", "signals"],
     answer:
-      "The foresight work includes horizon scanning, signals analysis, scenario planning, and decision frameworks that help teams prepare for multiple possible futures.",
+      "Strategic foresight helps leaders read emerging signals, build scenarios, and position for the future they want to lead into.",
   },
   {
     keywords: ["research", "evaluation", "evidence", "data"],
     answer:
-      "The research and evaluation work helps teams clarify what is working, what is changing, and why it matters through applied research design, stakeholder discovery, analysis, and practical recommendations.",
+      "The research and evaluation work surfaces what is actually happening inside an organization and turns those findings into the foundation for the next move.",
   },
   {
     keywords: ["coaching", "executive", "leadership", "leader"],
     answer:
-      "Executive coaching supports leaders navigating growth, ambiguity, team alignment, and the behavioral shifts required to lead through change.",
+      "Executive coaching helps leaders see themselves clearly, name what has been in the way, and move with intention toward the future they are building.",
   },
   {
     keywords: ["resource", "download", "guide", "checklist", "brief"],
     answer:
-      "The resource hub includes a Strategic Foresight Starter Kit, Evaluation Readiness Checklist, and Leadership Alignment Questions. Each one is downloadable from the Resource Hub section.",
+      "The resource hub includes a Strategic Foresight Starter Kit, Evaluation Readiness Checklist, and Leadership Alignment Questions. Download buttons are in place for each guide.",
   },
   {
     keywords: ["book", "booking", "call", "consultation", "discovery"],
     answer:
-      "Use the booking section to enter your work email and unlock the discovery call request. The first call is a 30-minute conversation about fit, urgency, and next steps.",
+      "Use the booking section to enter your first name and work email. The first call is a useful conversation about fit, urgency, and possible next steps.",
   },
   {
     keywords: ["content", "agent", "calendar", "caption", "post", "sources"],
     answer:
-      "The Content Agent checks Google Calendar, activates on scheduled content days, reads the event brief, researches current sources, and saves a caption, post body, and source links to Google Drive.",
+      "The Content Agent runs on recurring Tuesday and Thursday content days, reads the event brief, researches current sources, and saves a caption, post body, and source links to its Google Drive folder.",
   },
   {
     keywords: ["email", "gmail", "outlook", "inbox", "summary", "tasks", "label"],
     answer:
-      "The Email Agent runs each morning, reviews Gmail and Outlook, labels new messages, extracts tasks and deadlines, and produces one summary showing the sender, inbox source, priority, and required action.",
+      "The Email Agent runs at 6:30 AM, reviews Gmail and Outlook, labels new messages, extracts tasks and deadlines, and emails one summary showing the sender, inbox source, priority, and required action.",
   },
   {
     keywords: ["drive", "google", "tools", "claude"],
     answer:
-      "The proposed automation stack includes Google Calendar, web search, Claude AI, Google Drive, Gmail, and Outlook. Output can be organized in Drive folders for review and reuse.",
+      "The proposed automation stack includes Google Calendar, web search, Claude AI, Google Drive, Gmail, and Outlook. Drive output is organized with one folder per agent.",
   },
 ];
 
 captureForm?.addEventListener("submit", (event) => {
   event.preventDefault();
 
-  const email = new FormData(captureForm).get("email");
-  formNote.textContent = `Thanks. The resource hub is ready, and booking is unlocked for ${email}.`;
+  const formData = new FormData(captureForm);
+  const firstName = formData.get("firstName");
+  const email = formData.get("email");
+  formNote.textContent = `Thanks${firstName ? `, ${firstName}` : ""}. Resource updates are ready, and booking is unlocked for ${email}.`;
   bookingPanel.hidden = false;
   bookingPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
@@ -102,7 +104,7 @@ function getFaqAnswer(question) {
     return bestMatch.answer;
   }
 
-  return "I can help with Attenor services, downloadable resources, discovery calls, and the Content Agent or Email Agent proposal. Try asking about one of those.";
+  return "I can help with Attenor Collaborative services, downloadable resources, discovery calls, and the Content Agent or Email Agent proposal. Try asking about one of those.";
 }
 
 function askFaqAgent(question) {
