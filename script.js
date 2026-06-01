@@ -33,7 +33,7 @@ const faqAnswers = [
   {
     keywords: ["resource", "download", "guide", "checklist", "brief"],
     answer:
-      "The resource hub includes a Strategic Foresight Starter Kit, Evaluation Readiness Checklist, and Leadership Alignment Questions. Download buttons are in place for each guide.",
+      "The resource hub includes a Strategic Foresight Starter Kit, Evaluation Readiness Checklist, and Leadership Alignment Questions. The guides are locked on the page and delivered by email after you submit the booking form.",
   },
   {
     keywords: ["book", "booking", "call", "consultation", "discovery"],
@@ -63,7 +63,7 @@ captureForm?.addEventListener("submit", (event) => {
   const formData = new FormData(captureForm);
   const firstName = formData.get("firstName");
   const email = formData.get("email");
-  formNote.textContent = `Thanks${firstName ? `, ${firstName}` : ""}. Resource updates are ready, and booking is unlocked for ${email}.`;
+  formNote.textContent = `Thanks${firstName ? `, ${firstName}` : ""}. The resource PDFs will be sent to ${email}, and booking is unlocked.`;
   bookingPanel.hidden = false;
   bookingPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
@@ -104,7 +104,7 @@ function getFaqAnswer(question) {
     return bestMatch.answer;
   }
 
-  return "I can help with Attenor Collaborative services, downloadable resources, discovery calls, and the Content Agent or Email Agent proposal. Try asking about one of those.";
+  return "I can help with Attenor Collaborative services, resource guides, discovery calls, and the Content Agent or Email Agent proposal. Try asking about one of those.";
 }
 
 function askFaqAgent(question) {

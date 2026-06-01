@@ -455,6 +455,26 @@ p {
   box-shadow: 0 16px 46px rgba(35, 61, 53, 0.08);
 }
 
+.resource-card.is-locked {
+  position: relative;
+}
+
+.resource-card.is-locked::after {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  border: 1px solid rgba(35, 61, 53, 0.18);
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: var(--paper-deep);
+  color: var(--forest);
+  content: "Locked";
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .resource-card h3 {
   margin: 36px 0 14px;
   font-family: var(--serif);
@@ -464,9 +484,22 @@ p {
 .download-link {
   width: fit-content;
   margin-top: auto;
+  border: 0;
+  background: transparent;
   color: var(--forest);
+  font: inherit;
   font-weight: 800;
   border-bottom: 2px solid var(--clay);
+}
+
+.locked-link {
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: 0.76;
+}
+
+.locked-link::before {
+  content: "Locked - ";
 }
 
 .faq-section {
