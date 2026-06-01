@@ -8,6 +8,10 @@ const faqForm = document.querySelector("#faqForm");
 const faqInput = document.querySelector("#faqInput");
 const faqMessages = document.querySelector("#faqMessages");
 const faqPrompts = document.querySelectorAll(".faq-prompt");
+const resourceSection = document.querySelector("#resources");
+const resourceCards = document.querySelectorAll(".resource-card");
+const lockedResourceLinks = document.querySelectorAll(".locked-link");
+const unlockedResourceLinks = document.querySelectorAll(".unlocked-link");
 
 const faqAnswers = [
   {
@@ -33,7 +37,7 @@ const faqAnswers = [
   {
     keywords: ["resource", "download", "guide", "checklist", "brief"],
     answer:
-      "The private guide library includes a Strategic Foresight Starter Kit, Evaluation Readiness Checklist, and Leadership Alignment Questions. They are access-only tools delivered by email after you submit the booking form.",
+      "The private guide library includes a Strategic Foresight Starter Kit, Evaluation Readiness Checklist, and Leadership Alignment Questions. They are access-only tools that unlock on the page after you submit the booking form.",
   },
   {
     keywords: ["book", "booking", "call", "consultation", "discovery"],
@@ -63,9 +67,19 @@ captureForm?.addEventListener("submit", (event) => {
   const formData = new FormData(captureForm);
   const firstName = formData.get("firstName");
   const email = formData.get("email");
-  formNote.textContent = `Thanks${firstName ? `, ${firstName}` : ""}. The resource PDFs will be sent to ${email}, and booking is unlocked.`;
+  formNote.textContent = `Thanks${firstName ? `, ${firstName}` : ""}. The resource PDFs are unlocked below, and booking is ready for ${email}.`;
+  resourceCards.forEach((card) => {
+    card.classList.remove("is-locked");
+    card.classList.add("is-unlocked");
+  });
+  lockedResourceLinks.forEach((link) => {
+    link.hidden = true;
+  });
+  unlockedResourceLinks.forEach((link) => {
+    link.hidden = false;
+  });
   bookingPanel.hidden = false;
-  bookingPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  resourceSection?.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 function setFaqOpen(isOpen) {

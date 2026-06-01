@@ -445,6 +445,7 @@ p {
 }
 
 .resource-card {
+  position: relative;
   display: flex;
   min-height: 320px;
   flex-direction: column;
@@ -455,11 +456,7 @@ p {
   box-shadow: 0 16px 46px rgba(35, 61, 53, 0.08);
 }
 
-.resource-card.is-locked {
-  position: relative;
-}
-
-.resource-card.is-locked::after {
+.resource-card::after {
   position: absolute;
   top: 18px;
   right: 18px;
@@ -473,6 +470,13 @@ p {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.resource-card.is-unlocked::after {
+  border-color: rgba(125, 146, 127, 0.4);
+  background: rgba(125, 146, 127, 0.16);
+  color: var(--forest);
+  content: "Unlocked";
 }
 
 .resource-card h3 {
@@ -500,6 +504,10 @@ p {
 
 .locked-link::before {
   content: "Locked - ";
+}
+
+.unlocked-link[hidden] {
+  display: none;
 }
 
 .faq-section {
