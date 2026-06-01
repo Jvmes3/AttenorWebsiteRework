@@ -33,7 +33,7 @@ const faqAnswers = [
   {
     keywords: ["resource", "download", "guide", "checklist", "brief"],
     answer:
-      "The resource hub includes a Strategic Foresight Starter Kit, Evaluation Readiness Checklist, and Leadership Alignment Questions. The guides are locked on the page and delivered by email after you submit the booking form.",
+      "The private guide library includes a Strategic Foresight Starter Kit, Evaluation Readiness Checklist, and Leadership Alignment Questions. They are access-only tools delivered by email after you submit the booking form.",
   },
   {
     keywords: ["book", "booking", "call", "consultation", "discovery"],
