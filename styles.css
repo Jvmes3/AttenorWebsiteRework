@@ -274,26 +274,15 @@ p {
 .about-media {
   min-height: 560px;
   border: 1px solid var(--line);
-  background:
-    linear-gradient(135deg, rgba(35, 61, 53, 0.88), rgba(125, 146, 127, 0.58)),
-    url("https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&w=1200&q=82");
-  background-position: center;
-  background-size: cover;
+  background: var(--forest);
+  overflow: hidden;
 }
 
-.portrait-placeholder {
-  display: grid;
+.portrait-image {
   height: 100%;
   min-height: 560px;
-  place-items: end start;
-  padding: 34px;
-  color: var(--white);
-}
-
-.portrait-placeholder span {
-  font-family: var(--serif);
-  font-size: clamp(2.2rem, 5vw, 4.2rem);
-  font-weight: 700;
+  object-fit: cover;
+  object-position: 52% 34%;
 }
 
 .about-copy {
@@ -871,7 +860,7 @@ input[type="text"] {
   .split-image,
   .split-image img,
   .about-media,
-  .portrait-placeholder {
+  .portrait-image {
     min-height: 360px;
   }
 }
