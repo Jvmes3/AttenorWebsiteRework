@@ -17,47 +17,27 @@ const faqAnswers = [
   {
     keywords: ["what", "do", "services", "attenor", "help"],
     answer:
-      "Attenor Collaborative helps leaders make better decisions in complex environments through strategic foresight, research and evaluation, and executive coaching.",
+      "Attenor Collaborative helps senior leaders develop the capacity to lead intentionally into what is coming. Through strategic foresight, research and evaluation, and executive coaching, we help leaders read what is changing in their environment, make sense of what it means for their work, and move forward with clarity and confidence. We do not just advise and leave. We build alongside you.",
   },
   {
-    keywords: ["foresight", "scenario", "future", "futures", "signals"],
+    keywords: ["who", "work", "typically", "executives", "founders", "leaders"],
     answer:
-      "Strategic foresight helps leaders read emerging signals, build scenarios, and position for the future they want to lead into.",
+      "We work with accomplished senior leaders who have built real success and are not done. They are executives, founders, and organizational leaders who sense that the world is shifting in ways their current strategy does not yet account for. They are not in crisis. They are in transition, and they are wise enough to invest in their thinking before the future arrives uninvited.",
   },
   {
-    keywords: ["research", "evaluation", "evidence", "data"],
+    keywords: ["discovery", "call", "expect", "pitch", "fit"],
     answer:
-      "The research and evaluation work surfaces what is actually happening inside an organization and turns those findings into the foundation for the next move.",
+      "The discovery call is not a pitch. It is a conversation designed to clarify three things: whether there is a real fit, what your most urgent need is right now, and what a next step could look like. You will leave with at least one useful insight regardless of whether we work together. Most people find it valuable just to have the conversation.",
   },
   {
-    keywords: ["coaching", "executive", "leadership", "leader"],
+    keywords: ["different", "traditional", "executive", "coaching", "futures"],
     answer:
-      "Executive coaching helps leaders see themselves clearly, name what has been in the way, and move with intention toward the future they are building.",
+      "Most executive coaching focuses on your behavior, your goals, and your accountability. That work has value. What Attenor adds is a futures layer. We help you lift your head from the immediate and read what is emerging in your industry, your community, and the broader world before it catches you off guard. The result is a leader who is not just performing well today but positioned well for what is coming.",
   },
   {
-    keywords: ["resource", "download", "guide", "checklist", "brief"],
+    keywords: ["resource", "resources", "download", "access", "guide", "map", "tools"],
     answer:
-      "The private guide library includes a Strategic Foresight Starter Kit, Evaluation Readiness Checklist, and Leadership Alignment Questions. They are access-only tools that unlock on the page after you submit the booking form.",
-  },
-  {
-    keywords: ["book", "booking", "call", "consultation", "discovery"],
-    answer:
-      "Use the booking section to enter your first name and work email. The first call is a useful conversation about fit, urgency, and possible next steps.",
-  },
-  {
-    keywords: ["content", "agent", "calendar", "caption", "post", "sources"],
-    answer:
-      "The Content Agent runs on recurring Tuesday and Thursday content days, reads the event brief, researches current sources, and saves a caption, post body, and source links to its Google Drive folder.",
-  },
-  {
-    keywords: ["email", "gmail", "outlook", "inbox", "summary", "tasks", "label"],
-    answer:
-      "The Email Agent runs at 6:30 AM, reviews Gmail and Outlook, labels new messages, extracts tasks and deadlines, and emails one summary showing the sender, inbox source, priority, and required action.",
-  },
-  {
-    keywords: ["drive", "google", "tools", "claude"],
-    answer:
-      "The proposed automation stack includes Google Calendar, web search, Claude AI, Google Drive, Gmail, and Outlook. Drive output is organized with one folder per agent.",
+      "Attenor Collaborative offers three downloadable tools designed to help leaders start better conversations before they are ready for a full engagement. The Signal and Scenario Map helps you read emerging signals and test whether your current strategy is built for the world you are heading into. The Strategy Workflow Map helps you backcast from a long term destination to this year's priorities. The Coherence Map helps your team move from knowing the strategy to being able to speak to it together. Share your email to access all three.",
   },
 ];
 
@@ -118,7 +98,7 @@ function getFaqAnswer(question) {
     return bestMatch.answer;
   }
 
-  return "I can help with Attenor Collaborative services, resource guides, discovery calls, and the Content Agent or Email Agent proposal. Try asking about one of those.";
+  return "I can help with Attenor Collaborative services, resources, discovery calls, who we work with, and how this differs from traditional executive coaching. Try asking about one of those.";
 }
 
 function askFaqAgent(question) {

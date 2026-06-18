@@ -180,6 +180,27 @@ h1 {
   font-size: clamp(3rem, 8vw, 5.8rem);
 }
 
+.hero-mirror {
+  display: grid;
+  max-width: 960px;
+  gap: 12px;
+}
+
+.hero-mirror span {
+  display: block;
+}
+
+.hero-mirror span:first-child {
+  max-width: 860px;
+  font-size: clamp(2.55rem, 6.4vw, 5.15rem);
+  font-weight: 700;
+}
+
+.hero-mirror span:last-child {
+  font-size: clamp(3.1rem, 8vw, 6.2rem);
+  font-weight: 800;
+}
+
 h2 {
   font-size: clamp(2rem, 4.6vw, 4.2rem);
 }
