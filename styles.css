@@ -49,10 +49,10 @@ a {
   right: 0;
   z-index: 20;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  padding: 28px clamp(28px, 6vw, 88px);
+  padding: 24px clamp(28px, 5.4vw, 78px);
   background: transparent;
   color: var(--white);
 }
@@ -100,18 +100,49 @@ a {
 .site-nav {
   display: flex;
   align-items: center;
-  gap: clamp(14px, 3vw, 34px);
+  gap: clamp(8px, 1.8vw, 22px);
+  margin-top: 6px;
+  margin-left: auto;
   color: rgba(255, 253, 248, 0.78);
-  font-size: clamp(1rem, 2.1vw, 1.38rem);
-  font-weight: 400;
+  font-size: clamp(0.88rem, 1.35vw, 1.06rem);
+  font-weight: 600;
 }
 
 .site-nav a {
-  border-bottom: 1px solid transparent;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 8px 10px;
+  border-bottom: 0;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
 }
 
-.site-nav a:hover {
-  border-color: currentColor;
+.site-nav a::after {
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+  left: 10px;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.4);
+  transform-origin: center;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  background: rgba(255, 253, 248, 0.1);
+  color: var(--white);
+  transform: translateY(-3px);
+}
+
+.site-nav a:hover::after,
+.site-nav a:focus-visible::after {
+  opacity: 0.78;
+  transform: scaleX(1);
 }
 
 .hero {
@@ -875,16 +906,16 @@ input[type="text"] {
   .site-header {
     align-items: flex-start;
     flex-direction: row;
-    gap: 28px;
-    padding: 24px 48px;
+    gap: 24px;
+    padding: 22px 40px;
   }
 
   .site-nav {
     width: auto;
     overflow-x: auto;
     padding-bottom: 2px;
-    gap: 38px;
-    font-size: 1.35rem;
+    gap: 18px;
+    font-size: 1.02rem;
   }
 
   .hero {
@@ -922,7 +953,7 @@ input[type="text"] {
 
 @media (max-width: 560px) {
   .site-header {
-    padding: 24px 28px;
+    padding: 20px 24px;
   }
 
   .brand {
@@ -945,8 +976,8 @@ input[type="text"] {
   }
 
   .site-nav {
-    gap: 32px;
-    font-size: 1.18rem;
+    gap: 12px;
+    font-size: 0.92rem;
   }
 
   .hero {
