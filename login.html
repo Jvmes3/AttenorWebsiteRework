@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Client Login | Attenor Collaborative</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="account-page">
+    <header class="site-header account-header">
+      <a class="brand" href="/" aria-label="Attenor Collaborative home">
+        <span class="brand-mark">AC</span>
+        <span><strong>Attenor</strong><small>Collaborative</small></span>
+      </a>
+      <nav class="site-nav" aria-label="Account navigation">
+        <a href="/">Home</a>
+        <a class="impact-nav-link" href="/impact" hidden>Impact</a>
+      </nav>
+    </header>
+    <main class="account-main">
+      <section class="account-card" aria-labelledby="loginTitle">
+        <p class="eyebrow">Private client access</p>
+        <h1 id="loginTitle">Welcome back.</h1>
+        <p>Sign in to view the impact documents assigned to your account.</p>
+        <form class="account-form" id="loginForm">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" autocomplete="username" required>
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+          <button class="button primary" type="submit">Sign in</button>
+        </form>
+        <p class="account-status" id="loginStatus" role="status"></p>
+      </section>
+    </main>
+    <script src="login.js"></script>
+  </body>
+</html>

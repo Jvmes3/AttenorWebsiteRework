@@ -687,7 +687,9 @@ p {
 }
 
 input[type="email"],
-input[type="text"] {
+input[type="text"],
+input[type="password"],
+input[type="tel"] {
   flex: 1 1 240px;
   min-height: 48px;
   width: 100%;
@@ -697,6 +699,11 @@ input[type="text"] {
   background: var(--paper);
   color: var(--ink);
   font: inherit;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.68;
 }
 
 .capture-form label:not(:first-child) {
@@ -902,6 +909,212 @@ input[type="text"] {
   padding-inline: 15px;
 }
 
+.account-page {
+  min-height: 100vh;
+  background: var(--paper-deep);
+}
+
+.account-header {
+  position: static;
+  align-items: center;
+  background: var(--forest);
+}
+
+.account-header .site-nav {
+  margin-top: 0;
+}
+
+.account-main {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: clamp(64px, 9vw, 110px) 0;
+}
+
+.account-card {
+  width: min(520px, 100%);
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 48px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.account-card h1,
+.impact-heading h1 {
+  margin-bottom: 18px;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+}
+
+.account-card > p:not(.eyebrow),
+.impact-heading > p:not(.eyebrow) {
+  color: var(--muted);
+}
+
+.account-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.account-form label {
+  margin-top: 8px;
+  font-weight: 800;
+}
+
+.account-form .button {
+  margin-top: 14px;
+}
+
+.account-status {
+  min-height: 26px;
+  margin-top: 18px;
+  color: var(--clay);
+  font-weight: 700;
+}
+
+.impact-heading {
+  max-width: 760px;
+  margin-bottom: 42px;
+}
+
+.impact-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.impact-toolbar p {
+  color: var(--muted);
+}
+
+.document-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.document-card {
+  display: flex;
+  min-height: 240px;
+  flex-direction: column;
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: 0 16px 46px rgba(35, 61, 53, 0.08);
+}
+
+.document-card h2 {
+  margin: 30px 0 14px;
+  font-size: 1.55rem;
+}
+
+.document-card p {
+  color: var(--muted);
+}
+
+.document-card .download-link {
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.document-card.is-selected {
+  border-color: var(--clay);
+  box-shadow: 0 18px 52px rgba(182, 111, 79, 0.16);
+}
+
+.document-open-button {
+  border-right: 0;
+  border-top: 0;
+  border-left: 0;
+  padding-right: 0;
+  padding-left: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.document-viewer {
+  margin-top: 42px;
+  scroll-margin-top: 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.viewer-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.viewer-heading h2 {
+  font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+.viewer-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.viewer-controls button,
+.viewer-controls a,
+.viewer-controls span {
+  display: inline-grid;
+  min-width: 42px;
+  min-height: 40px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 6px 11px;
+  background: var(--paper);
+  color: var(--forest);
+  font: inherit;
+  font-weight: 800;
+}
+
+.viewer-controls button,
+.viewer-controls a {
+  cursor: pointer;
+}
+
+.viewer-controls button:hover,
+.viewer-controls a:hover {
+  border-color: var(--clay);
+}
+
+.viewer-frame-wrap {
+  height: min(78vh, 920px);
+  min-height: 560px;
+  background: #e7dfd2;
+}
+
+.viewer-frame-wrap iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: white;
+}
+
+.empty-state {
+  padding: 32px;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--muted);
+}
+
 @media (max-width: 900px) {
   .site-header {
     align-items: flex-start;
@@ -948,6 +1161,19 @@ input[type="text"] {
 
   .faq-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .document-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .viewer-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .viewer-controls {
+    justify-content: flex-start;
   }
 }
 

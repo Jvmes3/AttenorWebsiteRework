@@ -12,6 +12,7 @@ const resourceSection = document.querySelector("#resources");
 const resourceCards = document.querySelectorAll(".resource-card");
 const lockedResourceLinks = document.querySelectorAll(".locked-link");
 const unlockedResourceLinks = document.querySelectorAll(".unlocked-link");
+const impactNavLinks = document.querySelectorAll(".impact-nav-link");
 
 const faqAnswers = [
   {
@@ -41,13 +42,41 @@ const faqAnswers = [
   },
 ];
 
-captureForm?.addEventListener("submit", (event) => {
+captureForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const formData = new FormData(captureForm);
-  const firstName = formData.get("firstName");
+  const fullName = formData.get("fullName");
   const email = formData.get("email");
-  formNote.textContent = `Thanks${firstName ? `, ${firstName}` : ""}. The resource PDFs are unlocked below, and booking is ready for ${email}.`;
+  const submitButton = captureForm.querySelector('button[type="submit"]');
+  formNote.textContent = "Saving your information…";
+  submitButton.disabled = true;
+
+  try {
+    const response = await fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fullName,
+        email,
+        phone: formData.get("phone"),
+        source: "website-booking",
+      }),
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "We could not save your information.");
+    }
+
+    formNote.textContent = `Thanks${fullName ? `, ${fullName}` : ""}. The resource PDFs are unlocked below, and booking is ready for ${email}.`;
+  } catch (error) {
+    formNote.textContent = `${error.message} Please try again or email info@attenorcollab.com.`;
+    return;
+  } finally {
+    submitButton.disabled = false;
+  }
+
   resourceCards.forEach((card) => {
     card.classList.remove("is-locked");
     card.classList.add("is-unlocked");
@@ -61,6 +90,21 @@ captureForm?.addEventListener("submit", (event) => {
   bookingPanel.hidden = false;
   resourceSection?.scrollIntoView({ behavior: "smooth", block: "start" });
 });
+
+async function revealImpactNavigation() {
+  try {
+    const response = await fetch("/api/session", { credentials: "same-origin" });
+    if (!response.ok) return;
+
+    impactNavLinks.forEach((link) => {
+      link.hidden = false;
+    });
+  } catch {
+    // The public site remains usable if the account service is unavailable.
+  }
+}
+
+revealImpactNavigation();
 
 function setFaqOpen(isOpen) {
   if (!faqPanel || !faqToggle) return;

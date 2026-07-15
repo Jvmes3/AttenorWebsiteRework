@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <title>Client Impact | Attenor Collaborative</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="account-page">
+    <header class="site-header account-header">
+      <a class="brand" href="/" aria-label="Attenor Collaborative home">
+        <span class="brand-mark">AC</span>
+        <span><strong>Attenor</strong><small>Collaborative</small></span>
+      </a>
+      <nav class="site-nav" aria-label="Account navigation">
+        <a href="/">Home</a>
+        <a href="/impact" aria-current="page">Impact</a>
+      </nav>
+    </header>
+    <main class="account-main">
+      <div class="impact-heading">
+        <p class="eyebrow">Private client library</p>
+        <h1>Your impact documents.</h1>
+        <p>These materials are specific to your account and are available only while you are signed in.</p>
+      </div>
+      <div class="impact-toolbar" id="impactToolbar" hidden>
+        <p>Signed in as <strong id="accountName"></strong></p>
+        <button class="button primary" id="logoutButton" type="button">Sign out</button>
+      </div>
+      <p class="account-status" id="impactStatus" role="status">Confirming access…</p>
+      <section class="document-grid" id="documentGrid" aria-label="Your documents"></section>
+      <section class="document-viewer" id="documentViewer" aria-labelledby="viewerTitle" hidden>
+        <div class="viewer-heading">
+          <div>
+            <p class="eyebrow">Interactive document</p>
+            <h2 id="viewerTitle"></h2>
+          </div>
+          <div class="viewer-controls" aria-label="Document controls">
+            <button type="button" id="zoomOutButton" aria-label="Zoom out">−</button>
+            <span id="zoomLevel" aria-live="polite">100%</span>
+            <button type="button" id="zoomInButton" aria-label="Zoom in">+</button>
+            <a id="printLink" href="#" target="_blank" rel="noopener">Print</a>
+            <a id="downloadLink" href="#">Download</a>
+          </div>
+        </div>
+        <div class="viewer-frame-wrap">
+          <iframe
+            id="documentFrame"
+            title="Interactive impact document"
+            sandbox="allow-scripts"
+            referrerpolicy="same-origin"
+          ></iframe>
+        </div>
+      </section>
+    </main>
+    <script src="impact.js"></script>
+  </body>
+</html>
