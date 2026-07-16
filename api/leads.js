@@ -10,11 +10,13 @@ module.exports = async function handler(request, response) {
   }
 
   try {
-    const { fullName, email, phone, source } = await readJson(request);
+    const { fullName, email, phone, interest, notes, source } = await readJson(request);
     const lead = {
       full_name: String(fullName || "").trim().slice(0, 160),
       email: String(email || "").trim().toLowerCase().slice(0, 254),
       phone: String(phone || "").trim().slice(0, 40),
+      interest: String(interest || "").trim().slice(0, 160),
+      notes: String(notes || "").trim().slice(0, 2_000),
       source: String(source || "website").trim().slice(0, 80),
     };
 
@@ -23,8 +25,8 @@ module.exports = async function handler(request, response) {
     }
 
     const supabase = getSupabaseConfig();
-    if (!supabase) {
-      return sendJson(response, 503, { error: "Lead storage is not configured yet." });
+    if (!supabase.ok) {
+      return sendJson(response, 503, { error: supabase.error });
     }
 
     const result = await fetch(`${supabase.url}/rest/v1/interest_leads`, {
@@ -38,7 +40,8 @@ module.exports = async function handler(request, response) {
     });
 
     if (!result.ok) {
-      console.error("Supabase lead insert failed", result.status, await result.text());
+      const details = (await result.text()).slice(0, 500);
+      console.error("Supabase lead insert failed", result.status, details);
       return sendJson(response, 502, { error: "We could not save your information right now." });
     }
 

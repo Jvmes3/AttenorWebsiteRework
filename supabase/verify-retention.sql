@@ -17,15 +17,17 @@ from public.interest_leads;
 -- Confirm that a row can be written and read without leaving test data behind.
 begin;
 
-insert into public.interest_leads (full_name, email, phone, source)
+insert into public.interest_leads (full_name, email, phone, interest, notes, source)
 values (
   'Retention Verification',
   'retention-verification@example.invalid',
   '555-0100',
+  'Verify lead retention',
+  'Rollback-safe verification row',
   'manual-retention-test'
 );
 
-select id, full_name, email, phone, source, created_at
+select id, full_name, email, phone, interest, notes, source, created_at
 from public.interest_leads
 where email = 'retention-verification@example.invalid';
 

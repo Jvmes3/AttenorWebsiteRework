@@ -57,6 +57,54 @@
           ></iframe>
         </div>
       </section>
+      <section class="impact-next-step" aria-labelledby="nextStepTitle">
+        <div class="impact-next-copy">
+          <p class="eyebrow">Continue the work</p>
+          <h2 id="nextStepTitle">Turn insight into the next right action.</h2>
+          <p>
+            Attenor Collaborative helps organizations turn evidence into direction. The work
+            behind Wayman Academy's progress draws on strategic foresight, research and
+            evaluation, leadership advisory, and practical planning resources that help teams
+            build stronger systems and communicate their impact.
+          </p>
+          <ul class="impact-resource-list">
+            <li>Translate results into clear priorities and decisions</li>
+            <li>Align leaders, systems, and resources around the next phase</li>
+            <li>Track progress and share a credible story of impact</li>
+          </ul>
+          <a class="download-link" href="/#resources">Explore Attenor resources</a>
+        </div>
+        <form class="impact-interest-form" id="impactInterestForm">
+          <p class="eyebrow">What are you interested in?</p>
+          <p>Tell us what would be most useful, and Attenor will follow up with the right next step.</p>
+
+          <label for="impactFullName">Name</label>
+          <input id="impactFullName" name="fullName" type="text" autocomplete="name" required>
+
+          <label for="impactEmail">Work email</label>
+          <input id="impactEmail" name="email" type="email" autocomplete="email" required>
+
+          <label for="impactPhone">Phone number</label>
+          <input id="impactPhone" name="phone" type="tel" autocomplete="tel" required>
+
+          <label for="impactInterest">I would like to</label>
+          <select id="impactInterest" name="interest" required>
+            <option value="">Select an option</option>
+            <option value="Download Attenor resources">Download Attenor resources</option>
+            <option value="Schedule an inquiry call">Schedule an inquiry call</option>
+            <option value="Discuss strategic foresight">Discuss strategic foresight</option>
+            <option value="Discuss research and evaluation">Discuss research and evaluation</option>
+            <option value="Discuss executive coaching">Discuss executive coaching</option>
+            <option value="Other">Something else</option>
+          </select>
+
+          <label for="impactNotes">Anything else we should know? <span>(optional)</span></label>
+          <textarea id="impactNotes" name="notes" rows="4"></textarea>
+
+          <button class="button primary" type="submit">Send my interest</button>
+          <p class="account-status impact-interest-status" id="impactInterestStatus" role="status"></p>
+        </form>
+      </section>
     </main>
     <script src="impact.js"></script>
   </body>

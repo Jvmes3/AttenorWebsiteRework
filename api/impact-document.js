@@ -64,8 +64,8 @@ module.exports = async function handler(request, response) {
     }
 
     const supabase = getSupabaseConfig();
-    if (!supabase) {
-      return sendJson(response, 503, { error: "Document storage is not configured yet." });
+    if (!supabase.ok) {
+      return sendJson(response, 503, { error: supabase.error });
     }
 
     const storagePath = document.storagePath

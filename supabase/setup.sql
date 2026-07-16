@@ -4,11 +4,17 @@ create table if not exists public.interest_leads (
   full_name text not null,
   email text not null,
   phone text not null,
+  interest text,
+  notes text,
   source text not null default 'website',
   created_at timestamptz not null default now()
 );
 
 alter table public.interest_leads enable row level security;
+
+-- Safely upgrades projects where the table was created before these fields existed.
+alter table public.interest_leads add column if not exists interest text;
+alter table public.interest_leads add column if not exists notes text;
 
 -- No public policies are intentional. Website inserts use the server-only service role.
 create index if not exists interest_leads_created_at_idx

@@ -38,6 +38,8 @@ test("valid lead details are inserted into the retained Supabase table", async (
         fullName: "Test Person",
         email: "Test@Example.com",
         phone: "904-555-0100",
+        interest: "Schedule an inquiry call",
+        notes: "Interested in discussing the next phase.",
         source: "website-booking",
       },
     },
@@ -50,6 +52,8 @@ test("valid lead details are inserted into the retained Supabase table", async (
     full_name: "Test Person",
     email: "test@example.com",
     phone: "904-555-0100",
+    interest: "Schedule an inquiry call",
+    notes: "Interested in discussing the next phase.",
     source: "website-booking",
   });
   assert.equal(requestOptions.headers.Authorization, "Bearer test-service-role-key");
@@ -106,4 +110,27 @@ test("invalid lead details never reach the database", async (context) => {
   );
 
   assert.equal(response.statusCode, 400);
+});
+
+test("dashboard URLs return a concise Supabase configuration error", async (context) => {
+  const originalUrl = process.env.SUPABASE_URL;
+  context.after(() => (process.env.SUPABASE_URL = originalUrl));
+  process.env.SUPABASE_URL = "https://supabase.com/dashboard/project/example";
+
+  const response = responseMock();
+  await leads(
+    {
+      method: "POST",
+      headers: {},
+      body: {
+        fullName: "Test Person",
+        email: "test@example.com",
+        phone: "904-555-0100",
+      },
+    },
+    response,
+  );
+
+  assert.equal(response.statusCode, 503);
+  assert.match(JSON.parse(response.body).error, /project API URL/);
 });

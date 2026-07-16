@@ -2,6 +2,7 @@ const http = require("node:http");
 const { readFile } = require("node:fs/promises");
 const { extname, join, normalize } = require("node:path");
 const { randomBytes } = require("node:crypto");
+const { getSupabaseConfig } = require("../api/_lib/supabase");
 
 const root = join(__dirname, "..");
 const port = Number(process.env.PORT || 8000);
@@ -79,6 +80,17 @@ const server = http.createServer(async (request, response) => {
 
 server.listen(port, "127.0.0.1", () => {
   console.log(`Attenor local preview: http://localhost:${port}`);
-  console.log("Preview login: user1 / 1234");
+  if (process.env.ATTENOR_ACCOUNTS_JSON) {
+    try {
+      const accounts = JSON.parse(process.env.ATTENOR_ACCOUNTS_JSON);
+      console.log(`Account configuration: .env.local (${accounts.map((account) => account.username).join(", ")})`);
+    } catch {
+      console.log("Account configuration: ATTENOR_ACCOUNTS_JSON is invalid JSON");
+    }
+  } else {
+    console.log("Built-in preview login: user1 / 1234");
+  }
+  const supabase = getSupabaseConfig();
+  console.log(`Lead storage: ${supabase.ok ? "configured" : supabase.error}`);
   console.log("Press Ctrl+C to stop the server.");
 });
