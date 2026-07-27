@@ -33,6 +33,8 @@
         <a href="#faq">FAQ</a>
         <a href="#approach">Approach</a>
         <a href="#booking">Book</a>
+        <a href="/login">Login</a>
+        <a class="impact-nav-link" href="/impact" hidden>Impact</a>
       </nav>
     </header>
 
@@ -276,16 +278,20 @@
           </p>
         </div>
         <form class="capture-form" id="captureForm">
-          <label for="firstName">First name</label>
+          <label for="fullName">Name</label>
           <div class="form-row">
-            <input id="firstName" name="firstName" type="text" placeholder="First name" autocomplete="given-name" required>
+            <input id="fullName" name="fullName" type="text" placeholder="Full name" autocomplete="name" required>
           </div>
           <label for="email">Work email</label>
           <div class="form-row">
-            <input id="email" name="email" type="email" placeholder="you@organization.com" required>
+            <input id="email" name="email" type="email" placeholder="you@organization.com" autocomplete="email" required>
+          </div>
+          <label for="phone">Phone number</label>
+          <div class="form-row">
+            <input id="phone" name="phone" type="tel" placeholder="(555) 555-5555" autocomplete="tel" required>
             <button class="button primary" type="submit">Continue</button>
           </div>
-          <p class="consent-note">I will not sell or share your email address.</p>
+          <p class="consent-note">I will not sell or share your contact information.</p>
           <p class="form-note" id="formNote" role="status"></p>
         </form>
         <div class="booking-panel" id="bookingPanel" hidden>
