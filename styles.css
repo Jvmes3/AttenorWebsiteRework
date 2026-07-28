@@ -763,6 +763,10 @@ button:disabled {
   color: var(--forest);
 }
 
+.impact-next-step-portal {
+  grid-template-columns: 1fr;
+}
+
 .site-footer {
   display: grid;
   grid-template-columns: 1.2fr 0.6fr 0.8fr;

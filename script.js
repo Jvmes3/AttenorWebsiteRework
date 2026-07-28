@@ -60,6 +60,8 @@ captureForm?.addEventListener("submit", async (event) => {
         fullName,
         email,
         phone: formData.get("phone"),
+        interest: formData.get("interest"),
+        notes: formData.get("notes"),
         source: "website-booking",
       }),
     });
@@ -69,7 +71,7 @@ captureForm?.addEventListener("submit", async (event) => {
       throw new Error(result.error || "We could not save your information.");
     }
 
-    formNote.textContent = `Thanks${fullName ? `, ${fullName}` : ""}. The resource PDFs are unlocked below, and booking is ready for ${email}.`;
+    formNote.textContent = `Thanks${fullName ? `, ${fullName}` : ""}. Your interest has been saved, the resource PDFs are unlocked below, and Dr. Ward's scheduler is ready for ${email}.`;
   } catch (error) {
     formNote.textContent = `${error.message} Please try again or email info@attenorcollab.com.`;
     return;

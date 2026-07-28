@@ -1,6 +1,8 @@
 const { currentAccount, sendJson } = require("./_lib/http");
 const embeddedDocuments = require("./_lib/wayman-documents");
 const { getSupabaseConfig } = require("./_lib/supabase");
+const { readFileSync } = require("node:fs");
+const { join } = require("node:path");
 
 function safeFilename(value) {
   return String(value || "document.pdf").replace(/[^a-zA-Z0-9._-]/g, "-");
@@ -35,6 +37,20 @@ module.exports = async function handler(request, response) {
       : "download";
 
     if (document.embeddedKey && embeddedDocuments[document.embeddedKey]) {
+      if (mode === "download") {
+        const pdfFilename = safeFilename(
+          document.pdfFilename || String(document.filename || document.id).replace(/\.[^.]+$/, "") + ".pdf",
+        );
+        const pdf = readFileSync(join(__dirname, "_assets", pdfFilename));
+
+        response.statusCode = 200;
+        response.setHeader("Content-Type", "application/pdf");
+        response.setHeader("Content-Disposition", `attachment; filename="${pdfFilename}"`);
+        response.setHeader("Cache-Control", "private, no-store");
+        response.setHeader("X-Content-Type-Options", "nosniff");
+        return response.end(pdf);
+      }
+
       const requestedZoom = Number(request.query.zoom || 1);
       const zoom = Math.min(1.5, Math.max(0.6, Number.isFinite(requestedZoom) ? requestedZoom : 1));
       const html = prepareEmbeddedHtml(
@@ -47,7 +63,7 @@ module.exports = async function handler(request, response) {
       response.setHeader("Content-Type", "text/html; charset=utf-8");
       response.setHeader(
         "Content-Disposition",
-        `${mode === "download" ? "attachment" : "inline"}; filename="${safeFilename(document.filename)}"`,
+        `inline; filename="${safeFilename(document.filename)}"`,
       );
       response.setHeader("Cache-Control", "private, no-store");
       response.setHeader("X-Content-Type-Options", "nosniff");

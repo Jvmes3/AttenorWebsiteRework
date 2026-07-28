@@ -6,6 +6,7 @@
     "build": "echo \"Static site: no build step required\"",
     "serve": "python3 -m http.server 8000",
     "dev": "node --env-file-if-exists=.env.local scripts/dev-server.js",
+    "generate-pdfs": "node scripts/generate-pdfs.js",
     "hash-password": "node scripts/hash-password.js",
     "check": "node --test tests/*.test.js"
   },

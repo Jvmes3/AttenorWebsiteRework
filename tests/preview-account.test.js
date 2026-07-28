@@ -54,6 +54,29 @@ test("preview user1 can access both Wayman documents", async () => {
   assert.match(documentResponse.body, /html \{ zoom: 1.2; \}/);
 });
 
+test("preview Wayman downloads are real PDF attachments", async () => {
+  const loginResponse = responseMock();
+  await login(
+    { method: "POST", body: { username: "user1", password: "1234" }, headers: {} },
+    loginResponse,
+  );
+
+  const downloadResponse = responseMock();
+  await impactDocument(
+    {
+      method: "GET",
+      query: { id: "wayman-story-of-impact", mode: "download" },
+      headers: { cookie: loginResponse.headers["Set-Cookie"] },
+    },
+    downloadResponse,
+  );
+
+  assert.equal(downloadResponse.statusCode, 200);
+  assert.equal(downloadResponse.headers["Content-Type"], "application/pdf");
+  assert.match(downloadResponse.headers["Content-Disposition"], /\.pdf"/);
+  assert.equal(downloadResponse.body.subarray(0, 4).toString(), "%PDF");
+});
+
 test("preview fallback is unavailable when Vercel marks the deployment production", async () => {
   process.env.VERCEL_ENV = "production";
   const response = responseMock();

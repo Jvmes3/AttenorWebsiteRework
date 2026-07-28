@@ -3,6 +3,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".",
   "cleanUrls": true,
+  "functions": {
+    "api/impact-document.js": {
+      "includeFiles": "api/_assets/**"
+    }
+  },
   "headers": [
     {
       "source": "/impact",

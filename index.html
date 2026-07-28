@@ -66,7 +66,7 @@
         <div class="about-media">
           <img
             class="portrait-image"
-            src="assets/ronetta-wards-headshot.jpg"
+            src="assets/ronetta-wards-photo.png"
             alt="Ronetta Wards, Ph.D., founder and principal of Attenor Collaborative"
           >
         </div>
@@ -277,20 +277,34 @@
             Share your email to reveal the resource PDFs and unlock the discovery call scheduler.
           </p>
         </div>
-        <form class="capture-form" id="captureForm">
+        <form class="capture-form impact-interest-form" id="captureForm">
+          <p class="eyebrow">What are you interested in?</p>
+          <p>Tell us what would be most useful, and Attenor will follow up with the right next step.</p>
+
           <label for="fullName">Name</label>
-          <div class="form-row">
-            <input id="fullName" name="fullName" type="text" placeholder="Full name" autocomplete="name" required>
-          </div>
+          <input id="fullName" name="fullName" type="text" autocomplete="name" required>
+
           <label for="email">Work email</label>
-          <div class="form-row">
-            <input id="email" name="email" type="email" placeholder="you@organization.com" autocomplete="email" required>
-          </div>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+
           <label for="phone">Phone number</label>
-          <div class="form-row">
-            <input id="phone" name="phone" type="tel" placeholder="(555) 555-5555" autocomplete="tel" required>
-            <button class="button primary" type="submit">Continue</button>
-          </div>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" required>
+
+          <label for="interest">I would like to</label>
+          <select id="interest" name="interest" required>
+            <option value="">Select an option</option>
+            <option value="Download Attenor resources">Download Attenor resources</option>
+            <option value="Schedule an inquiry call">Schedule an inquiry call</option>
+            <option value="Discuss strategic foresight">Discuss strategic foresight</option>
+            <option value="Discuss research and evaluation">Discuss research and evaluation</option>
+            <option value="Discuss executive coaching">Discuss executive coaching</option>
+            <option value="Other">Something else</option>
+          </select>
+
+          <label for="notes">Anything else we should know? <span>(optional)</span></label>
+          <textarea id="notes" name="notes" rows="4"></textarea>
+
+          <button class="button primary" type="submit">Send my interest</button>
           <p class="consent-note">I will not sell or share your contact information.</p>
           <p class="form-note" id="formNote" role="status"></p>
         </form>
@@ -301,8 +315,8 @@
             Connect with Attenor Collaborative to discuss your decision context, current
             challenges, and the right advisory path.
           </p>
-          <a class="button secondary" href="mailto:info@attenorcollab.com?subject=Discovery%20Call%20Request">
-            Request a time
+          <a class="button secondary" href="https://calendly.com/attenorcollab" target="_blank" rel="noopener">
+            View Dr. Ward's availability
           </a>
         </div>
       </section>

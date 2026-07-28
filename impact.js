@@ -11,8 +11,6 @@ const zoomInButton = document.querySelector("#zoomInButton");
 const zoomLevel = document.querySelector("#zoomLevel");
 const printLink = document.querySelector("#printLink");
 const downloadLink = document.querySelector("#downloadLink");
-const impactInterestForm = document.querySelector("#impactInterestForm");
-const impactInterestStatus = document.querySelector("#impactInterestStatus");
 let selectedDocument = null;
 let selectedZoom = 1;
 
@@ -112,37 +110,5 @@ logoutButton.addEventListener("click", async () => {
 
 zoomOutButton.addEventListener("click", () => changeZoom(-0.1));
 zoomInButton.addEventListener("click", () => changeZoom(0.1));
-
-impactInterestForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const button = impactInterestForm.querySelector('button[type="submit"]');
-  const formData = new FormData(impactInterestForm);
-  button.disabled = true;
-  impactInterestStatus.textContent = "Saving your request…";
-
-  try {
-    const response = await fetch("/api/leads", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fullName: formData.get("fullName"),
-        email: formData.get("email"),
-        phone: formData.get("phone"),
-        interest: formData.get("interest"),
-        notes: formData.get("notes"),
-        source: "client-impact-portal",
-      }),
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "We could not save your request.");
-
-    impactInterestForm.reset();
-    impactInterestStatus.textContent = "Thank you. Your interest has been saved, and Attenor will follow up.";
-  } catch (error) {
-    impactInterestStatus.textContent = `${error.message} Please try again or email info@attenorcollab.com.`;
-  } finally {
-    button.disabled = false;
-  }
-});
 
 loadAccount();

@@ -8,8 +8,8 @@ anything into `main`.
 
 ## What is stored
 
-The booking and Impact follow-up forms send name, email, phone number, selected interest, optional
-notes, source, and submission time to the
+The homepage booking form sends name, email, phone number, selected interest, optional notes,
+source, and submission time to the
 `interest_leads` table in Supabase. Attenor staff can view, filter, and export those records from
 the Supabase table editor for follow-up. The browser never receives the Supabase service-role key.
 Rows remain in the table until an authorized administrator explicitly changes or deletes them;
