@@ -13,6 +13,7 @@ const resourceCards = document.querySelectorAll(".resource-card");
 const lockedResourceLinks = document.querySelectorAll(".locked-link");
 const unlockedResourceLinks = document.querySelectorAll(".unlocked-link");
 const impactNavLinks = document.querySelectorAll(".impact-nav-link");
+const funnelCopy = document.querySelector(".funnel-copy");
 
 const faqAnswers = [
   {
@@ -107,6 +108,21 @@ async function revealImpactNavigation() {
 }
 
 revealImpactNavigation();
+
+if (funnelCopy && "IntersectionObserver" in window) {
+  funnelCopy.classList.add("has-reveal");
+  const bookingObserver = new IntersectionObserver(
+    ([entry], observer) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      observer.unobserve(entry.target);
+    },
+    { threshold: 0.28 },
+  );
+  bookingObserver.observe(funnelCopy);
+} else {
+  funnelCopy?.classList.add("is-visible");
+}
 
 function setFaqOpen(isOpen) {
   if (!faqPanel || !faqToggle) return;

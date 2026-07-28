@@ -671,6 +671,75 @@ p {
   margin-bottom: 20px;
 }
 
+.booking-value-list {
+  display: grid;
+  gap: 14px;
+  margin: 30px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.booking-value-list li {
+  position: relative;
+  padding-left: 30px;
+  color: var(--forest);
+  font-weight: 700;
+}
+
+.booking-value-list li::before {
+  position: absolute;
+  left: 0;
+  color: var(--clay);
+  content: "✓";
+}
+
+.booking-resource-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid var(--clay);
+  padding-bottom: 4px;
+  color: var(--forest);
+  font-weight: 800;
+}
+
+.booking-resource-link span {
+  transition: transform 180ms ease;
+}
+
+.booking-resource-link:hover span,
+.booking-resource-link:focus-visible span {
+  transform: translateX(5px);
+}
+
+.funnel-copy.has-reveal > * {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.funnel-copy.is-visible > * {
+  animation: booking-reveal 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.funnel-copy.is-visible > :nth-child(2) {
+  animation-delay: 90ms;
+}
+
+.funnel-copy.is-visible > :nth-child(3) {
+  animation-delay: 180ms;
+}
+
+.funnel-copy.is-visible > :nth-child(4) {
+  animation-delay: 270ms;
+}
+
+@keyframes booking-reveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .capture-form,
 .booking-panel {
   padding: 28px;
@@ -765,6 +834,17 @@ button:disabled {
 
 .impact-next-step-portal {
   grid-template-columns: 1fr;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .funnel-copy.has-reveal > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  .funnel-copy.is-visible > * {
+    animation: none;
+  }
 }
 
 .site-footer {
