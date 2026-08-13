@@ -72,7 +72,10 @@ captureForm?.addEventListener("submit", async (event) => {
       throw new Error(result.error || "We could not save your information.");
     }
 
-    formNote.textContent = `Thanks${fullName ? `, ${fullName}` : ""}. Your interest has been saved, the resource PDFs are unlocked below, and Dr. Ward's scheduler is ready for ${email}.`;
+    const emailUpdate = result.confirmationEmailSent
+      ? ` A confirmation email is on its way to ${email}.`
+      : "";
+    formNote.textContent = `Thanks${fullName ? `, ${fullName}` : ""}. Your interest has been saved.${emailUpdate} The resource PDFs are unlocked below, and Dr. Ward's scheduler is ready.`;
   } catch (error) {
     formNote.textContent = `${error.message} Please try again or email info@attenorcollab.com.`;
     return;

@@ -7,7 +7,7 @@ const PREVIEW_ACCOUNTS = [
     username: "user1",
     displayName: "Wayman Academy of the Arts",
     passwordHash:
-      "scrypt$attenor-wayman-preview-user1$xchBjDmuD9lEN5Oo_w0pt4IZV0Dq6EvVGZV5y5ws7Y7mPQa9tPEGdsDUZnf5UXy3hXOwtxi22rMxBIhJ4sUBkA",
+      "scrypt$attenor-wayman-preview-eagles-fy26$S_MB8yAPS86Q5nNYaxflvdpDmlzZUtxevxk_tEBG21eS-E4bLQarEU1bSmq4ARxj7NuqU34wqJ2Tg-IGEgLYgw",
     documents: [
       {
         id: "wayman-story-of-impact",

@@ -15,6 +15,19 @@ the Supabase table editor for follow-up. The browser never receives the Supabase
 Rows remain in the table until an authorized administrator explicitly changes or deletes them;
 there is no automatic deletion job in this project.
 
+After a lead is saved, the server sends the client a confirmation through Resend when
+`RESEND_API_KEY` and `LEAD_CONFIRMATION_FROM` are configured. Email delivery is deliberately
+non-blocking: a provider outage is logged, but it does not discard the lead or tell the client to
+submit a duplicate. Verify the sending domain in Resend, then add both variables to the matching
+Vercel Preview and Production environments. `ATTENOR_SCHEDULER_URL` is optional and defaults to
+the public Attenor Calendly URL.
+
+To mirror each saved lead into a Google Sheet, deploy an Apps Script web app that accepts JSON and
+appends it as a row, then set its HTTPS URL as `LEAD_SPREADSHEET_WEBHOOK_URL`. The mirror runs only
+after Supabase accepts the lead and is non-blocking, so Supabase remains the source of truth if the
+spreadsheet is temporarily unavailable. The payload contains `full_name`, `email`, `phone`,
+`interest`, `notes`, `source`, and `submitted_at`.
+
 Private documents belong in the non-public Supabase Storage bucket named `impact-documents`.
 Document paths are assigned per account in `ATTENOR_ACCOUNTS_JSON`; the download API verifies the
 signed-in user before retrieving a file. Do not put client files in the public `resources/` folder.
@@ -41,7 +54,7 @@ Generate `SESSION_SECRET` with `openssl rand -base64 48`. Keep all four plain-te
 client's password manager; only their scrypt hashes belong in Vercel.
 
 For Preview and local environments only, the repository includes the requested test account
-`user1` with password `1234` and the two Wayman Academy HTML reports. This fallback is deliberately
+`user1` with password `EaglesFY26!` and the two Wayman Academy HTML reports. This fallback is deliberately
 disabled when `VERCEL_ENV=production`; production requires `ATTENOR_ACCOUNTS_JSON` with a strong
 password.
 
@@ -51,7 +64,7 @@ Use `npm run check` for authentication/session tests and `npm run build` for the
 
 Run `npm run dev` to preview the complete site locally at `http://localhost:8000`, including login,
 sessions, the Impact page, and protected Wayman documents. The preview command creates a temporary
-session secret in memory and uses `user1` / `1234`; stopping the server ends existing sessions.
+session secret in memory and uses `user1` / `EaglesFY26!`; stopping the server ends existing sessions.
 Lead storage still requires Supabase environment variables because those records are persistent.
 
 ## Retention and backups

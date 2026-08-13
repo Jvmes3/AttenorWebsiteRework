@@ -112,6 +112,92 @@ test("invalid lead details never reach the database", async (context) => {
   assert.equal(response.statusCode, 400);
 });
 
+test("a confirmation email is sent after the lead is saved", async (context) => {
+  const originalFetch = global.fetch;
+  const originalApiKey = process.env.RESEND_API_KEY;
+  const originalFrom = process.env.LEAD_CONFIRMATION_FROM;
+  context.after(() => {
+    global.fetch = originalFetch;
+    if (originalApiKey === undefined) delete process.env.RESEND_API_KEY;
+    else process.env.RESEND_API_KEY = originalApiKey;
+    if (originalFrom === undefined) delete process.env.LEAD_CONFIRMATION_FROM;
+    else process.env.LEAD_CONFIRMATION_FROM = originalFrom;
+  });
+  process.env.RESEND_API_KEY = "re_test_key";
+  process.env.LEAD_CONFIRMATION_FROM = "Attenor <hello@attenorcollab.com>";
+
+  const requests = [];
+  global.fetch = async (url, options) => {
+    requests.push({ url, options });
+    return url.includes("supabase.co")
+      ? new Response(null, { status: 201 })
+      : new Response(JSON.stringify({ id: "email_123" }), { status: 200 });
+  };
+
+  const response = responseMock();
+  await leads(
+    {
+      method: "POST",
+      headers: {},
+      body: {
+        fullName: "Taylor Example",
+        email: "taylor@example.com",
+        phone: "904-555-0100",
+        interest: "Schedule an inquiry call",
+      },
+    },
+    response,
+  );
+
+  assert.equal(requests.length, 2);
+  assert.equal(requests[1].url, "https://api.resend.com/emails");
+  assert.equal(requests[1].options.headers.Authorization, "Bearer re_test_key");
+  assert.deepEqual(JSON.parse(requests[1].options.body).to, ["taylor@example.com"]);
+  assert.equal(JSON.parse(response.body).confirmationEmailSent, true);
+});
+
+test("a saved lead is mirrored to the configured spreadsheet webhook", async (context) => {
+  const originalFetch = global.fetch;
+  const originalWebhook = process.env.LEAD_SPREADSHEET_WEBHOOK_URL;
+  context.after(() => {
+    global.fetch = originalFetch;
+    if (originalWebhook === undefined) delete process.env.LEAD_SPREADSHEET_WEBHOOK_URL;
+    else process.env.LEAD_SPREADSHEET_WEBHOOK_URL = originalWebhook;
+  });
+  process.env.LEAD_SPREADSHEET_WEBHOOK_URL =
+    "https://script.google.com/macros/s/test-deployment/exec";
+
+  const requests = [];
+  global.fetch = async (url, options) => {
+    requests.push({ url: String(url), options });
+    return new Response(null, { status: url.toString().includes("supabase.co") ? 201 : 200 });
+  };
+
+  const response = responseMock();
+  await leads(
+    {
+      method: "POST",
+      headers: {},
+      body: {
+        fullName: "Morgan Example",
+        email: "morgan@example.com",
+        phone: "904-555-0101",
+        interest: "Discuss strategic foresight",
+        notes: "Please follow up next week.",
+      },
+    },
+    response,
+  );
+
+  assert.equal(requests.length, 2);
+  assert.equal(requests[1].url, process.env.LEAD_SPREADSHEET_WEBHOOK_URL);
+  const payload = JSON.parse(requests[1].options.body);
+  assert.equal(payload.full_name, "Morgan Example");
+  assert.equal(payload.email, "morgan@example.com");
+  assert.match(payload.submitted_at, /^\d{4}-\d{2}-\d{2}T/);
+  assert.equal(JSON.parse(response.body).spreadsheetMirrored, true);
+});
+
 test("dashboard URLs return a concise Supabase configuration error", async (context) => {
   const originalUrl = process.env.SUPABASE_URL;
   context.after(() => (process.env.SUPABASE_URL = originalUrl));

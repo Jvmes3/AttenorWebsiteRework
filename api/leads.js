@@ -1,5 +1,7 @@
 const { readJson, sendJson } = require("./_lib/http");
 const { getSupabaseConfig } = require("./_lib/supabase");
+const { sendLeadConfirmation } = require("./_lib/email");
+const { mirrorLeadToSpreadsheet } = require("./_lib/spreadsheet");
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -45,7 +47,24 @@ module.exports = async function handler(request, response) {
       return sendJson(response, 502, { error: "We could not save your information right now." });
     }
 
-    return sendJson(response, 201, { saved: true });
+    const [emailResult, spreadsheetResult] = await Promise.allSettled([
+      sendLeadConfirmation(lead),
+      mirrorLeadToSpreadsheet(lead),
+    ]);
+    const confirmationEmailSent =
+      emailResult.status === "fulfilled" && emailResult.value.sent;
+    const spreadsheetMirrored =
+      spreadsheetResult.status === "fulfilled" && spreadsheetResult.value.mirrored;
+
+    // The lead is already safely stored. Integration outages must not invite a duplicate submission.
+    if (emailResult.status === "rejected") {
+      console.error("Lead confirmation email failed", emailResult.reason);
+    }
+    if (spreadsheetResult.status === "rejected") {
+      console.error("Lead spreadsheet mirror failed", spreadsheetResult.reason);
+    }
+
+    return sendJson(response, 201, { saved: true, confirmationEmailSent, spreadsheetMirrored });
   } catch (error) {
     console.error("Lead endpoint failed", error);
     return sendJson(response, 400, { error: "Invalid request." });
