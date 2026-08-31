@@ -54,7 +54,7 @@ Generate `SESSION_SECRET` with `openssl rand -base64 48`. Keep all four plain-te
 client's password manager; only their scrypt hashes belong in Vercel.
 
 For Preview and local environments only, the repository includes the requested test account
-`user1` with password `EaglesFY26!` and the two Wayman Academy HTML reports. This fallback is deliberately
+`user1` with password `Eagles_FY26!` and the two Wayman Academy HTML reports. This fallback is deliberately
 disabled when `VERCEL_ENV=production`; production requires `ATTENOR_ACCOUNTS_JSON` with a strong
 password.
 
@@ -64,7 +64,7 @@ Use `npm run check` for authentication/session tests and `npm run build` for the
 
 Run `npm run dev` to preview the complete site locally at `http://localhost:8000`, including login,
 sessions, the Impact page, and protected Wayman documents. The preview command creates a temporary
-session secret in memory and uses `user1` / `EaglesFY26!`; stopping the server ends existing sessions.
+session secret in memory and uses `user1` / `Eagles_FY26!`; stopping the server ends existing sessions.
 Lead storage still requires Supabase environment variables because those records are persistent.
 
 ## Retention and backups

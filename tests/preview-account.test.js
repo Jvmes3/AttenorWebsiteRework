@@ -24,10 +24,17 @@ function responseMock() {
 test("preview user1 can access both Wayman documents", async () => {
   const loginResponse = responseMock();
   await login(
-    { method: "POST", body: { username: "user1", password: "EaglesFY26!" }, headers: {} },
+    { method: "POST", body: { username: "user1", password: "Eagles_FY26!" }, headers: {} },
     loginResponse,
   );
   assert.equal(loginResponse.statusCode, 200);
+
+  const rejectedLoginResponse = responseMock();
+  await login(
+    { method: "POST", body: { username: "user1", password: "EaglesFY26!" }, headers: {} },
+    rejectedLoginResponse,
+  );
+  assert.equal(rejectedLoginResponse.statusCode, 401);
 
   const sessionResponse = responseMock();
   await session(
@@ -57,7 +64,7 @@ test("preview user1 can access both Wayman documents", async () => {
 test("preview Wayman downloads are real PDF attachments", async () => {
   const loginResponse = responseMock();
   await login(
-    { method: "POST", body: { username: "user1", password: "EaglesFY26!" }, headers: {} },
+    { method: "POST", body: { username: "user1", password: "Eagles_FY26!" }, headers: {} },
     loginResponse,
   );
 
@@ -81,7 +88,7 @@ test("preview fallback is unavailable when Vercel marks the deployment productio
   process.env.VERCEL_ENV = "production";
   const response = responseMock();
   await login(
-    { method: "POST", body: { username: "user1", password: "EaglesFY26!" }, headers: {} },
+    { method: "POST", body: { username: "user1", password: "Eagles_FY26!" }, headers: {} },
     response,
   );
   assert.equal(response.statusCode, 503);
