@@ -4,7 +4,7 @@ const SESSION_COOKIE = "attenor_impact_session";
 const SESSION_MAX_AGE = 60 * 60 * 8;
 const PREVIEW_ACCOUNTS = [
   {
-    username: "user1",
+    username: "Wayman",
     displayName: "Wayman Academy of the Arts",
     passwordHash:
       "scrypt$attenor-wayman-preview-eagles-fy26-underscore$WQaw0O3DbZQntHR4O1ONwzSDEH48WVXI4DeRHlQX9hsHongvG4LVc2fdZ4RsqL7fYPN1WIjcoZlIvuk2scrKdg",
