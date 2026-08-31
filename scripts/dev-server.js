@@ -88,7 +88,7 @@ server.listen(port, "127.0.0.1", () => {
       console.log("Account configuration: ATTENOR_ACCOUNTS_JSON is invalid JSON");
     }
   } else {
-    console.log("Built-in preview login: user1 / 1234");
+    console.log("Built-in preview login: user1 / Eagles_FY26!");
   }
   const supabase = getSupabaseConfig();
   console.log(`Lead storage: ${supabase.ok ? "configured" : supabase.error}`);
