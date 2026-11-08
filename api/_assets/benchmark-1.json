@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "question_number": 1,
+    "standard_code": "SC.5.N.1.1",
+    "standard_domain": "Nature of Science",
+    "question_text": "Students in Ms. Rivera's class want to see how different amounts of water affect how tall bean plants grow. They plan to: (1) Plant four bean seeds in four cups with the same kind of soil, (2) Put the cups on the same windowsill, (3) Give each cup a different amount of water every day, (4) Measure the height of the plants after three weeks. Which question is this investigation MOST likely trying to answer?",
+    "choice_a": "Which plant grows the fastest in sunlight?",
+    "choice_b": "How do different amounts of water affect plant growth?",
+    "choice_c": "How many seeds will grow in each cup?",
+    "choice_d": "What kind of soil do plants like best?"
+  },
+  {
+    "id": 2,
+    "question_number": 2,
+    "standard_code": "SC.5.N.2.1",
+    "standard_domain": "Nature of Science",
+    "question_text": "A student is watching birds at the school pond. Which statement is an observation rather than an opinion?",
+    "choice_a": "The birds look beautiful when they fly.",
+    "choice_b": "The birds like this pond more than other ponds.",
+    "choice_c": "Four birds are sitting on the fence by the water.",
+    "choice_d": "The birds seem happier when people are not nearby."
+  },
+  {
+    "id": 3,
+    "question_number": 3,
+    "standard_code": "SC.5.N.2.2",
+    "standard_domain": "Nature of Science",
+    "question_text": "A class tests how far a toy car rolls down a ramp. They repeat the investigation three times using the same ramp and the same car each time. Why is it important that they repeat the investigation?",
+    "choice_a": "So they can use more ramps in the future.",
+    "choice_b": "So they can change their data if they do not like it.",
+    "choice_c": "So other classes cannot copy their investigation.",
+    "choice_d": "So they can check that their results are reliable."
+  },
+  {
+    "id": 4,
+    "question_number": 4,
+    "standard_code": "SC.5.E.7.1",
+    "standard_domain": "Earth Systems: Water Cycle",
+    "question_text": "A clear plastic cup is filled halfway with water and placed in a sunny window. After two days the water level is lower. Which process in the water cycle caused the water level to go down?",
+    "choice_a": "Condensation",
+    "choice_b": "Evaporation",
+    "choice_c": "Precipitation",
+    "choice_d": "Collection"
+  },
+  {
+    "id": 5,
+    "question_number": 5,
+    "standard_code": "SC.5.P.8.1",
+    "standard_domain": "Physical Science: Properties of Matter",
+    "question_text": "A student compares three samples: Sample A keeps its shape and can be held in her hand. Sample B takes the shape of any container it is poured into. Sample C spreads out to fill the entire room. Which row correctly matches each sample to its state of matter?",
+    "choice_a": "A gas, B solid, C liquid",
+    "choice_b": "A liquid, B gas, C solid",
+    "choice_c": "A solid, B liquid, C gas",
+    "choice_d": "A gas, B liquid, C solid"
+  },
+  {
+    "id": 6,
+    "question_number": 6,
+    "standard_code": "SC.5.P.13.2",
+    "standard_domain": "Physical Science: Force and Motion",
+    "question_text": "Luis pushes two boxes across the floor with the same force. Box X has a mass of 10 kilograms. Box Y has a mass of 5 kilograms. Which statement best describes what will happen?",
+    "choice_a": "Box X will move faster because it is heavier.",
+    "choice_b": "Box Y will move faster because it has less mass.",
+    "choice_c": "Both boxes will move at the same speed.",
+    "choice_d": "Neither box will move because the force is the same."
+  },
+  {
+    "id": 7,
+    "question_number": 7,
+    "standard_code": "SC.5.L.17.1",
+    "standard_domain": "Life Science: Adaptations",
+    "question_text": "Cactus plants live in very dry environments. They have thick stems that store water and spines instead of leaves. How do these adaptations help cactus plants survive?",
+    "choice_a": "The thick stems and spines allow the cactus to grow taller than other plants.",
+    "choice_b": "The thick stems and spines help the cactus use more water than other plants.",
+    "choice_c": "The thick stems store water and the spines protect the plant from animals.",
+    "choice_d": "The thick stems and spines help the cactus make food without sunlight."
+  }
+]

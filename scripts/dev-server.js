@@ -9,6 +9,9 @@ const port = Number(process.env.PORT || 8000);
 
 process.env.VERCEL_ENV ||= "preview";
 process.env.SESSION_SECRET ||= randomBytes(48).toString("base64url");
+// This development server is the only entry point that enables disposable assessment data.
+// Deployed API functions require explicit configuration and reject preview mode in production.
+process.env.ATTENOR_ASSESSMENT_PREVIEW ??= "1";
 
 const apiRoutes = {
   "/api/leads": require("../api/leads"),
@@ -16,12 +19,23 @@ const apiRoutes = {
   "/api/logout": require("../api/logout"),
   "/api/session": require("../api/session"),
   "/api/impact-document": require("../api/impact-document"),
+  "/api/portal": require("../api/portal"),
+  "/api/assessment-session": require("../api/assessment-session"),
+  "/api/assessment-access": require("../api/assessment-access"),
+  "/api/assessment-questions": require("../api/assessment-questions"),
+  "/api/assessment-submit": require("../api/assessment-submit"),
+  "/api/assessment-admin": require("../api/assessment-admin"),
 };
 
 const pageRoutes = {
   "/": "index.html",
   "/login": "login.html",
   "/impact": "impact.html",
+  "/portal": "portal.html",
+  "/profile": "assessments.html",
+  "/assessments": "assessments.html",
+  "/coherence": "assessments.html",
+  "/facilitator": "assessments.html",
 };
 
 const mimeTypes = {
@@ -37,10 +51,12 @@ const mimeTypes = {
 };
 
 function publicFile(pathname) {
-  if (pageRoutes[pathname]) return pageRoutes[pathname];
+  const routePath = pathname.replace(/\/$/, "") || "/";
+  if (pageRoutes[routePath]) return pageRoutes[routePath];
+  if (/^\/coherence\/[a-z0-9][a-z0-9-]{0,79}$/.test(routePath) || /^\/benchmark-(?:[1-9]|1[0-9]|2[0-2])$/.test(routePath)) return "assessments.html";
 
   const cleaned = normalize(pathname).replace(/^[/\\]+/, "");
-  const isRootAsset = ["index.html", "login.html", "impact.html", "script.js", "login.js", "impact.js", "styles.css"].includes(cleaned);
+  const isRootAsset = ["index.html", "login.html", "impact.html", "assessments.html", "script.js", "login.js", "impact.js", "assessments.js", "portal.html", "portal.js", "portal.css", "styles.css", "assessments.css"].includes(cleaned);
   const isPublicDirectory = cleaned.startsWith("assets/") || cleaned.startsWith("resources/");
   return isRootAsset || isPublicDirectory ? cleaned : null;
 }
@@ -67,6 +83,7 @@ const server = http.createServer(async (request, response) => {
     response.writeHead(200, {
       "Content-Type": mimeTypes[extname(relativePath).toLowerCase()] || "application/octet-stream",
       "Cache-Control": "no-store",
+      ...(["assessments.html", "portal.html"].includes(relativePath) ? { "X-Robots-Tag": "noindex, nofollow, noarchive", "Referrer-Policy": "same-origin" } : {}),
     });
     response.end(contents);
   } catch (error) {
@@ -92,5 +109,6 @@ server.listen(port, "127.0.0.1", () => {
   }
   const supabase = getSupabaseConfig();
   console.log(`Lead storage: ${supabase.ok ? "configured" : supabase.error}`);
+  console.log(`Assessment Studio: http://localhost:${port}/assessments (${process.env.ATTENOR_ASSESSMENT_PREVIEW === "1" && process.env.VERCEL_ENV !== "production" ? "test portal; configured Supabase records persist" : "configured sessions only"})`);
   console.log("Press Ctrl+C to stop the server.");
 });
