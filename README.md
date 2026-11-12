@@ -68,149 +68,122 @@ sessions, the Impact page, and protected Wayman documents. The preview command c
 session secret in memory and uses `Wayman` / `Eagles_FY26!`; stopping the server ends existing sessions.
 Lead storage still requires Supabase environment variables because those records are persistent.
 
-## Portal and Assessment Studio
+## Separate Wayman benchmark site
 
-The homepage’s **Launch Portal** button opens `/portal`, where visitors choose Student or
-Facilitator. The portal uses the existing static frontend, Vercel functions, and the website’s
-existing Supabase project. It does not create a separate hosting project or reuse Ronetta’s
-question database for student accounts.
+Wayman students, parents, and teachers use a dedicated entry at `/wayman` in the test preview.
+The planned live hostname is `wayman.attenorcollab.com`, with `/benchmark-1` through
+`/benchmark-22`. These routes render `wayman.html`, not the consulting portal. The host-specific
+root rewrite opens the Wayman directory. Known consulting entry paths on that hostname redirect
+back to the school directory; consulting authentication APIs reject that hostname.
 
-- **Students** create an account with a teacher-issued student code, teacher name, password, and
-  one of eight animal avatars. Existing students sign in with their code and password. They see
-  only the “Small steps. Growing minds.” benchmark area and currently available assessments.
-  `/profile` shows their saved student details and lets them change their animal avatar.
-- **Facilitators** sign in with the shared facilitator password. There is no individual profile
-  setup. Their portal includes the Leadership Coherence Check, benchmarks, session management,
-  and the Facilitator Workspace. The portal prompts facilitators to complete the leadership
-  reflection before reviewing team results.
+Students do not register, sign in, choose an avatar, or enter a password. At the beginning of
+each benchmark they enter their teacher-assigned **student number** and **teacher’s name**.
+Numbers are unique across Wayman for the school year, as confirmed by James. Preserve numbers
+as strings, including leading zeros. The stable growth-tracking identity is school year + student
+number; teacher name is an attribute of the submission, so a teacher change does not change the
+student’s identity. Teachers retain the master list mapping numbers to real identities. The
+assessment form accepts digits only for student numbers and never asks for student names.
 
-Student accounts and avatars are persistent in Supabase and can be used from another browser.
-Passwords are stored as scrypt hashes; the browser receives a signed, HttpOnly cookie containing
-an account ID and password revision, never the password hash or database credentials. Profile
-changes read and update the signed-in student’s record. Role checks also run in the APIs: a
-student cannot gain facilitator access by changing a URL or hiding/showing interface elements.
-The existing `/login` client-document library is separate and does not grant portal admin access.
+All 22 benchmark paths are available without dates, week-based locks, prerequisite completion,
+or individual access grants. The directory distinguishes actual available question content from
+questions still being prepared. It never invents content for an empty assessment. A student can
+return directly to an older benchmark for a makeup whenever its questions exist.
 
-### Test branch and local preview
+### Test-only publication
 
-Publish this work from **`test-production`**, using a Vercel Preview deployment. Keep `main` and
-Production unchanged until the team approves a release. The exact combination
-`VERCEL_ENV=preview` and `VERCEL_GIT_COMMIT_REF=test-production` enables the test portal’s seeded
-sessions and practice password. Local `npm run dev` also enables test mode by default using
-`ATTENOR_ASSESSMENT_PREVIEW=1`; production never accepts that preview flag as authorization.
-A branch name alone cannot turn on test access in a Production deployment.
+Keep this revision on **`test-production`** and publish it through Vercel Preview. Do not merge to
+`main`, promote a deployment, activate the live subdomain, or change DNS as part of this test.
+The exact combination `VERCEL_ENV=preview` and `VERCEL_GIT_COMMIT_REF=test-production` enables
+test mode; local `npm run dev` also enables it by default. Production ignores the preview flag.
 
-Use fictional student codes, practice teacher names, and practice responses while testing. Test
-records are retained in Supabase under `environment = 'test'`; they do not disappear when a Vercel
-function or local server restarts. Production records use `environment = 'production'`. The same
-student code may exist independently in the two environments. No automatic deletion job is
-configured.
+Open `/wayman` or `/benchmark-1` to test without a login. Use practice student numbers and teacher
+names. In test mode, `/api/wayman` saves validated responses to the website’s existing
+`portal_assessment_responses` table with `environment='test'`, `participant_id=null`, and a payload
+containing `schoolYear`, `assessmentId`, `studentNumber`, `teacherName`, and answers. No student
+account is read or created. The previously created `portal_students` table is retired and remains
+untouched; the old signup/signin/profile API actions return HTTP 410. Existing student cookies
+are ignored, cleared, and directed to the separate Wayman entry.
 
-| Test access | Credentials |
-| --- | --- |
-| Student | Create an account at `/portal`, then use that student code and password |
-| Facilitator at `/portal` | `Facilitator26!` |
-| Leadership session `leadership-demo` | `Coherence26!` when using its participant password route |
-| Benchmark 1 participant route | `Eagles_FY26!` when a session password is requested |
+Starting a benchmark issues a short-lived, HttpOnly, host-only attempt cookie, not a student login.
+The attempt binds number, teacher, school year, benchmark, and a server-generated submission UUID.
+Submissions cannot replace that identity with values in the request body. A mismatched attempt
+(such as another student starting the same benchmark in another tab) cannot save under the wrong
+student. Retrying the same submission returns its original receipt without creating a duplicate.
+The form does not retain profiles, names, numbers, or answers in localStorage/sessionStorage.
+A confirmation is displayed only after the server confirms a database save.
 
-The portal routes are `/portal`, `/assessments`, `/profile`, `/facilitator`, `/coherence`,
-`/coherence/<session-slug>`, and `/benchmark-1` through `/benchmark-22`. Available benchmark
-metadata comes from the server. Benchmark 2 remains unavailable until its separate assessment
-file is supplied and reviewed. Later benchmark routes are prepared but do not manufacture
-questions or open assessments that are not configured.
+### Question bank and live saves
 
-### Supabase records and access
+`WAYMAN_SUPABASE_URL` and `WAYMAN_SUPABASE_KEY` are server-only settings for Ronetta’s existing
+Wayman project. The adapter reads question content from `wayman_questions` filtered by
+`assessment_id`, ordered by `question_number`. It returns only question text, choices, numbering,
+and standards, never answer keys or other students’ responses. Availability is derived from actual
+question rows for assessments 1–22. In test mode only, Benchmark 1 can use the supplied seven-question
+snapshot in `api/_assets/benchmark-1.json` when the external connection is not configured.
 
-Run [`supabase/portal-setup.sql`](supabase/portal-setup.sql) against the website’s existing Supabase
-project when preparing another environment. Its three additive tables are:
+Set `WAYMAN_SCHOOL_YEAR=2026-2027` consistently for the entire school year. Change it only when
+opening the next school year. The separate `SUPABASE_URL` and `SUPABASE_SECRET_KEY` settings are
+for Attenor’s existing test/facilitator storage and must not be confused with Ronetta’s project.
+Keep all service credentials out of HTML, browser JavaScript, Git, URLs, and `NEXT_PUBLIC_*` values.
+All functions must share a stable `SESSION_SECRET` of at least 32 random characters.
 
-| Table | Saved records |
-| --- | --- |
-| `portal_students` | Student code, teacher name, animal avatar, password hash, and timestamps |
-| `portal_assessment_sessions` | Unique session IDs/slugs, assessment type, password hash, expected response count, and status |
-| `portal_assessment_responses` | Submission UUID, session ID, optional signed-in student ID, response payload, and submission time |
-
-Every table includes an environment tag. Every response belongs to a session; foreign keys keep
-student and session references within that environment. Responses are saved only after validation,
-and retrying the same submission UUID returns the original receipt rather than adding another row.
-The SQL enables row-level security and revokes table access from browser `anon` and `authenticated`
-roles. Server requests use the existing `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (or legacy
-`SUPABASE_SERVICE_ROLE_KEY`). Keep those values only in `.env.local` and the appropriate Vercel
-server environment. Never put a service-role/secret key in HTML, browser JavaScript, a tracked
-file, a URL, or a `NEXT_PUBLIC_*` variable.
-
-Configure a stable `SESSION_SECRET` with at least 32 random characters in Vercel Preview. All portal
-and assessment functions must receive the same value so cookies remain valid across serverless
-instances. Local development generates a temporary secret only if one is not supplied; changing
-that secret ends existing logins without deleting saved profiles or responses.
-
-Session creation generates a unique invitation link and password and saves the session in
-Supabase. The generated password is shown once; only its hash is retained. Facilitators can select
-any configured session and track its saved response count. The workspace refreshes every ten
-seconds while visible. Leadership averages and score ranges become available when saved complete
-responses meet the session’s expected count (5–15; the test leadership session defaults to 15).
-Before that threshold, the interface shows collection progress. Shared facilitator access does
-not verify the identity of each respondent. Benchmark tracking counts saved submissions; graded
-score analytics require stored grading data and are not fabricated from the question-only snapshot.
-AI calibration summaries and spreadsheet exports are not enabled by this build.
-
-### Production configuration
-
-Production student signup/signin remains disabled unless `ATTENOR_PORTAL_STUDENTS_ENABLED=1` is
-explicitly configured. Before a production release, also configure
-`ATTENOR_ASSESSMENT_ADMIN_PASSWORD_HASH` and actual session settings; the built-in facilitator
-password and demo sessions are test-only. Generate scrypt password hashes with `npm run hash-password`.
-`ATTENOR_ASSESSMENT_SESSIONS_JSON` can supply initial sessions, including unique `id` and `slug`,
-`name`, `organization`, `type`, `status`, and `passwordHash`; benchmark sessions also supply
-`benchmark` (1 through 22), and leadership sessions can supply `expectedParticipants` (5 through 15).
-Server database errors are reported as unavailable access or unconfirmed saves, rather than a
-successful registration or receipt.
-
-### Ronetta’s Wayman question database
-
-`WAYMAN_SUPABASE_URL` and `WAYMAN_SUPABASE_KEY` are separate server settings for Ronetta’s existing
-Wayman project. The adapter reads `wayman_questions` by `assessment_id`, ordered by
-`question_number`, and returns question text, A–D choices, and standards without exposing answer
-keys. In test mode only, Benchmark 1 may use the supplied seven-question snapshot in
-`api/_assets/benchmark-1.json` when the external question connection is not configured. It contains
-no answer keys or student records. Test portal responses are saved to the website’s
-`portal_assessment_responses` table, not written to Ronetta’s student tables.
-
-For a separate production integration that saves directly to Ronetta’s Wayman tables, configure
-an atomic database function through `WAYMAN_SUBMIT_RPC`. This build does not install a function
-or change the schema in her project. The fallback adapter calls
-`/rest/v1/rpc/<WAYMAN_SUBMIT_RPC>` with:
+Live Wayman saves remain disabled until Ronetta/Ethan provide and verify the actual schema and
+approved server-side connection. The prepared RPC adapter requires both
+`WAYMAN_SUBMISSIONS_ENABLED=1` and `WAYMAN_SUBMIT_RPC=<approved-function-name>`, and calls:
 
 ```json
 {
-  "p_submission_id": "client-generated-uuid",
-  "p_session_id": "configured-session-id",
+  "p_submission_id": "server-generated-attempt-uuid",
+  "p_session_id": "wayman-2026-2027-benchmark-1",
   "p_assessment_id": 1,
-  "p_student_code": "student-code",
+  "p_school_year": "2026-2027",
+  "p_student_code": "0017",
   "p_teacher_name": "Teacher name",
   "p_answers": [{ "question_id": 1, "selected_answer": "A" }]
 }
 ```
 
-The function must validate session/assessment access, grade with server-side answer keys, save
-answers and the submission in one transaction, preserve teacher name and session ID, and
-deduplicate `p_submission_id`. It must return
-`{"id":"<same-submission-uuid>","submittedAt":"<ISO-8601-timestamp>"}`. This avoids the supplied
-HTML’s separate inserts, which can partially save or duplicate a response. Review the existing
-Wayman tables’ permissions and function with Ronetta before using that integration for students.
+`p_student_code` is the compatibility field for the assigned student number; it is not an account.
+Confirm this contract against the supplied schema before enabling it. The approved function must
+validate question/assessment membership, preserve the school-year/number identity and teacher,
+save atomically, and deduplicate the submission UUID. It must return
+`{"id":"<same-attempt-uuid>","submittedAt":"<ISO-8601-timestamp>"}`. No live save falls back to
+Attenor’s test store or server memory. No schema or function in Ronetta’s project has been changed.
 
-The leadership PDF is a facilitated participant guide rather than an eight-dimension scoring
-instrument. The form uses the eight dimensions from the build brief. Its descriptions and 1–5
-rating anchors are draft web copy for Dr. Wards to calibrate before a live engagement, rather than
-transcribed scoring criteria from the PDF.
+### Facilitator and consulting access
 
-### Wayman subdomain
+The homepage’s **Launch Portal** button continues to `/portal`, now exclusively for facilitator
+shared-password access. There is no student role picker, signup, avatar selection, or profile page.
+`/profile` redirects to the separate Wayman directory. The existing client-document `/login` is
+independent. Facilitator navigation links to the school site separately. The Leadership Coherence
+Check, session management, response tracking, and Facilitator Workspace experience remain intact.
+Analytics display changes, AI summaries, and grading/trend integration are on hold until the live
+backend is verified and real data is available.
 
-Add `wayman.attenorcollab.com` to the existing Vercel project and configure its DNS record when
-ready to launch that host. `/benchmark-1` through `/benchmark-22` then use the same application.
-If that host should open the portal at `/`, add a host-conditional rewrite from `/` to `/portal`
-for that exact hostname. Keep the main domain’s homepage at `/`. Publishing the test branch does
-not change domain/DNS configuration or promote the branch to Production.
+The test facilitator password remains `Facilitator26!`. Production requires
+`ATTENOR_ASSESSMENT_ADMIN_PASSWORD_HASH`; the test password and seeded leadership session are never
+production credentials. Optional initial sessions use `ATTENOR_ASSESSMENT_SESSIONS_JSON` as before.
+The existing facilitator tables remain service-role-only with row-level security enabled.
+
+### Live subdomain handoff and target timeline
+
+The code contains the host-specific routing, but `wayman.attenorcollab.com` has not been added,
+activated, or pointed at this test branch. Before activating it, the domain owner should add the
+hostname to the intended Vercel deployment/project, apply the exact DNS record Vercel supplies,
+and verify HTTPS. Do not guess a CNAME target or modify the main Attenor domain’s root route.
+The live deployment must contain the revised Wayman routes and verified live save configuration.
+
+To target student use by **November 30, 2026**, aim to receive the following by **November 18**:
+
+- Question and submission schema, approved server access through a secure channel, and the
+  actual Benchmark 1 question/answer set or confirmation of the existing assessment mapping.
+- Confirmation of where school year, student number, teacher, answers, and grading belong,
+  plus retry/retake rules and the intended production project.
+- The domain/DNS administrator and access needed to add and verify the Wayman hostname.
+
+Allow 2–3 working days after complete access for integration and verification, then a teacher-led
+pilot around November 23–25. Resolve pilot findings before the November 30 target. This schedule
+is conditional on timely backend/DNS access; the test revision can be reviewed independently now.
 
 ## Retention and backups
 

@@ -385,6 +385,7 @@ async function adminHandler(request, response) {
 function endpoint(methods, handler) {
   return async (request, response) => {
     try {
+      if (require("./wayman").isWaymanHost(request)) throw new AssessmentError(404, "This service is not part of the Wayman benchmark site.");
       if (!methods.includes(request.method)) { response.setHeader("Allow", methods.join(", ")); throw new AssessmentError(405, "Method not allowed."); }
       if (request.method !== "GET") checkOrigin(request);
       return await handler(request, response);

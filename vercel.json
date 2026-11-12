@@ -5,6 +5,16 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "wayman.attenorcollab.com"
+        }
+      ],
+      "destination": "/wayman"
+    },
+    {
       "source": "/coherence",
       "destination": "/assessments"
     },
@@ -14,14 +24,10 @@
     },
     {
       "source": "/benchmark-:number([1-9]|1[0-9]|2[0-2])",
-      "destination": "/assessments"
+      "destination": "/wayman"
     },
     {
       "source": "/facilitator",
-      "destination": "/assessments"
-    },
-    {
-      "source": "/profile",
       "destination": "/assessments"
     }
   ],
@@ -209,6 +215,69 @@
           "value": "same-origin"
         }
       ]
+    },
+    {
+      "source": "/wayman",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "private, no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "same-origin"
+        }
+      ]
+    },
+    {
+      "source": "/wayman.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "private, no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "same-origin"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/:page(portal|assessments|profile|facilitator|login|impact|index)",
+      "has": [
+        {
+          "type": "host",
+          "value": "wayman.attenorcollab.com"
+        }
+      ],
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/coherence/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "wayman.attenorcollab.com"
+        }
+      ],
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/profile",
+      "destination": "/wayman",
+      "permanent": false
     }
   ]
 }

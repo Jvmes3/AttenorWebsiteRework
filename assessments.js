@@ -1,5 +1,6 @@
 (() => {
   "use strict";
+  if (window.location.hostname === "wayman.attenorcollab.com") { window.location.replace("/"); return; }
 
   const main = document.querySelector("#main");
   const breadcrumb = document.querySelector("#breadcrumb");
@@ -25,7 +26,6 @@
     check: '<path d="m5 12 4 4L19 6"/>',
     link: '<path d="m9 15 6-6 M8 16l-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0 M16 8l1-1a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0" transform="translate(1 0) scale(.9)"/>',
   };
-  const animals = { fox: "🦊", owl: "🦉", bear: "🐻", rabbit: "🐰", panda: "🐼", cat: "🐱", dog: "🐶", tiger: "🐯" };
   let portalIdentity = null;
   let catalog = [];
   let session = null;
@@ -118,14 +118,8 @@
   }
 
   function updatePortalShell() {
-    const student = portalIdentity.role === "student";
-    document.body.classList.toggle("student-portal", student);
-    document.querySelectorAll("[data-facilitator-only]").forEach((item) => { item.hidden = student; });
-    document.querySelectorAll("[data-student-only]").forEach((item) => { item.hidden = !student; });
-    document.querySelector("#portalRole").textContent = student ? "Student portal" : "Facilitator portal";
-    const avatar = document.querySelector("#portalAvatar");
-    avatar.hidden = !student;
-    avatar.textContent = student ? animals[portalIdentity.profile.avatar] : "AC";
+    document.querySelectorAll("[data-facilitator-only]").forEach((item) => { item.hidden = false; });
+    document.querySelector("#portalRole").textContent = "Facilitator portal";
     const signout = document.querySelector("#portalSignout");
     signout.hidden = false;
     signout.onclick = async () => {
@@ -138,22 +132,21 @@
   async function bootstrap() {
     try {
       portalIdentity = await portalRequest();
-      if (!portalIdentity.authenticated) { window.location.replace(`/portal?next=${encodeURIComponent(path)}`); return; }
+      if (!portalIdentity.authenticated) { window.location.replace(portalIdentity.waymanEntry ? "/wayman" : `/portal?next=${encodeURIComponent(path)}`); return; }
       updatePortalShell();
-      if (portalIdentity.role === "student" && (path === "/facilitator" || path === "/coherence")) { window.location.replace("/assessments"); return; }
       const result = await api("session?catalog=1");
       catalog = result.sessions || [];
       mode = result.mode;
       const leadershipSession = catalog.find((item) => item.type === "leadership" && item.status === "open");
       if (leadershipSession) document.querySelector('[data-nav="leadership"]').href = routeFor(leadershipSession);
-      if (path === "/profile") return portalIdentity.role === "student" ? renderProfile() : window.location.replace("/assessments");
+      if (path === "/profile") { window.location.replace("/wayman"); return; }
       if (path === "/facilitator") return openAdmin();
       if (path === "/coherence") return renderCodeEntry();
       if (path.startsWith("/coherence/")) {
         const slug = path.slice("/coherence/".length);
         return /^[a-z0-9][a-z0-9-]{0,79}$/.test(slug) ? openSession(slug) : fail("Please use the complete link from your facilitator.");
       }
-      if (/^\/benchmark-(?:[1-9]|1\d|2[0-2])$/.test(path)) return path === "/benchmark-1" ? openSession("benchmark-1") : renderComingSoon();
+      if (/^\/benchmark-(?:[1-9]|1\d|2[0-2])$/.test(path)) { window.location.replace(path); return; }
       renderHub();
     } catch (error) {
       if (error.status === 401 || error.status === 403) { window.location.replace("/portal"); return; }
@@ -161,40 +154,14 @@
     }
   }
 
-  function renderStudentHub() {
-    const profile = portalIdentity.profile;
-    const available = catalog.filter((item) => item.type === "benchmark" && item.status === "open");
-    setView(`${notice()}<div class="page-heading"><div><p class="eyebrow">Wayman Academy of Arts · Grade 5</p><h1>Hello, ${esc(profile.studentCode)}.</h1><p>Bring your curiosity. There’s something new to learn.</p></div><a class="student-welcome-avatar" href="/profile" aria-label="View my profile">${animals[profile.avatar]}</a></div><section class="hero-panel student-hero"><div class="hero-copy"><p class="eyebrow">Your learning journey</p><h2>Small steps.<br><em>Growing minds.</em></h2><p>A little thinking. A little exploring. Every benchmark helps you and your teacher see how far you’ve come.</p></div><div class="student-hero-art" aria-hidden="true"><span>✦</span><div>${animals[profile.avatar]}</div><small>ONE STEP AT A TIME</small></div></section><section class="benchmarks-section"><div class="section-label"><h2>Ready when you are</h2><span>${available.length} ${available.length === 1 ? "benchmark" : "benchmarks"} available</span></div><div class="benchmark-list">${available.length ? available.map((item) => `<article class="benchmark-row"><span class="week-number">${String(item.benchmark).padStart(2, "0")}</span><div><h3>${esc(item.name)}</h3><p>Week ${item.benchmark} · Grade 5 science · Work at your own pace</p></div><span class="pill">Available</span><a class="button small" href="${esc(routeFor(item))}">Start benchmark <span aria-hidden="true">→</span></a></article>`).join("") : '<div class="empty-state">You’re all caught up for now. Your teacher will let you know when your next benchmark opens.</div>'}</div></section><div class="student-profile-strip"><span class="profile-strip-animal" aria-hidden="true">${animals[profile.avatar]}</span><div><strong>Your space, your little companion.</strong><p>Student code: ${esc(profile.studentCode)} · Teacher: ${esc(profile.teacherName)}</p></div><a class="text-link" href="/profile">View my profile →</a></div>`, "My benchmarks", "assessments");
-  }
-
-  function renderProfile(message = "") {
-    const profile = portalIdentity.profile;
-    setView(`${notice()}<a class="back-link" href="/assessments">← Back to my benchmarks</a><div class="page-heading"><div><p class="eyebrow">A little space of your own</p><h1>My profile.</h1><p>Your student details and your animal companion.</p></div></div><section class="profile-layout"><div class="profile-summary"><span class="profile-large-animal" aria-hidden="true">${animals[profile.avatar]}</span><h2>${esc(profile.studentCode)}</h2><span class="pill">Wayman student</span><dl><dt>STUDENT CODE</dt><dd>${esc(profile.studentCode)}</dd><dt>TEACHER</dt><dd>${esc(profile.teacherName)}</dd><dt>PASSWORD</dt><dd>••••••••</dd></dl><p>Your password stays private. Your teacher can help if your student details need to change.</p></div><form id="avatarForm" class="profile-avatar-panel"><p class="eyebrow">Pick your learning companion</p><h2>A new animal. Still you.</h2><p>Choose a favorite. You can change it whenever you like.</p><fieldset class="animal-fieldset"><legend class="sr-only">Choose your animal avatar</legend><div class="profile-animal-grid">${Object.entries(animals).map(([name, emoji]) => `<label class="profile-animal-option"><input type="radio" name="avatar" value="${name}" ${profile.avatar === name ? "checked" : ""} required><span><strong aria-hidden="true">${emoji}</strong><small>${name.charAt(0).toUpperCase() + name.slice(1)}</small></span></label>`).join("")}</div></fieldset><p class="status-message ${message ? "profile-saved" : ""}" id="profileStatus" role="status">${esc(message)}</p><button class="button" type="submit">Save my avatar <span aria-hidden="true">→</span></button></form></section>`, "My profile", "profile");
-    document.querySelector("#avatarForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const button = event.currentTarget.querySelector('button[type="submit"]');
-      button.disabled = true;
-      const status = document.querySelector("#profileStatus");
-      status.textContent = "Saving your companion…";
-      try {
-        const result = await portalRequest({ action: "profile", avatar: new FormData(event.currentTarget).get("avatar") });
-        if (result.profile) portalIdentity.profile = result.profile;
-        else portalIdentity = await portalRequest();
-        updatePortalShell();
-        renderProfile("Your avatar is saved. Looking good!");
-      } catch (error) { status.textContent = error.message; button.disabled = false; }
-    });
-  }
-
   function renderHub() {
-    if (portalIdentity?.role === "student") return renderStudentHub();
     setView(`<div class="page-heading"><div><p class="eyebrow">A little reflection. A clearer path forward.</p><h1>Welcome to the studio.</h1><p>A shared space to pause, understand, and move forward together.</p></div><span class="date-stamp">ATTENOR COLLABORATIVE</span></div>
       <section class="hero-panel" aria-labelledby="heroTitle"><div class="hero-copy"><p class="eyebrow">Perspective is where progress begins</p><h2 id="heroTitle">Individual voices.<br><em>Shared understanding.</em></h2><p>Bring your perspective to the bigger picture. Our assessments help teams and learners see where they are—and what comes next.</p></div><div class="hero-illustration" aria-hidden="true"><div class="orbit"></div><div class="orbit"></div><div class="orbit"></div><div class="orbit-center">ac</div><span class="orbit-dot"></span><span class="orbit-dot second"></span><span class="orbit-cross">+</span></div></section>
       <div class="facilitator-prompt"><span class="tool-icon">${icon("target")}</span><div><p class="eyebrow">Start with your perspective</p><h2>Your team’s clarity starts with you.</h2><p>Complete the Leadership Coherence Check before reviewing your team’s results.</p></div><a class="button" href="${esc(routeFor(catalog.find((item) => item.type === "leadership" && item.status === "open") || {type: "leadership", slug: "leadership-demo"}))}">Complete my reflection <span aria-hidden="true">→</span></a></div><div class="section-label"><h2>Find your starting point</h2><span>Two pathways. One purpose: progress.</span></div>
       <div class="tool-grid"><article class="tool-card" id="leadership"><div class="tool-card-top"><span class="tool-icon">${icon("target")}</span><span class="pill">For leadership teams</span></div><p class="eyebrow">Reflect · Align · Lead</p><h3>Leadership Coherence Check</h3><p>Explore how your team sees its strategy, capacity, and readiness for what’s next. Eight dimensions to start a more meaningful conversation.</p><div class="tool-meta"><span>${icon("target")}8 dimensions</span><span>${icon("people")}5–15 participants</span><span>${icon("lock")}Password access</span></div><div class="tool-card-footer"><a class="text-link" href="/coherence">Join your team’s session <span aria-hidden="true">→</span></a><span class="mini-label">Individual reflection</span></div></article>
-      <article class="tool-card" id="wayman"><div class="tool-card-top"><span class="tool-icon terra">${icon("book")}</span><span class="pill warm">For students</span></div><p class="eyebrow">Wayman Academy of Arts</p><h3>Small steps. Growing minds.</h3><p>Weekly science benchmarks that help students show what they know and help teachers understand where learning goes next.</p><div class="tool-meta"><span>${icon("book")}Grade 5 science</span><span>${icon("clock")}Weekly benchmarks</span></div><div class="tool-card-footer"><a class="text-link" href="#benchmarkList">View your benchmarks <span aria-hidden="true">→</span></a><span class="mini-label">2026–2027</span></div></article></div>
+      <article class="tool-card" id="wayman"><div class="tool-card-top"><span class="tool-icon terra">${icon("book")}</span><span class="pill warm">For students</span></div><p class="eyebrow">Wayman Academy of Arts</p><h3>Small steps. Growing minds.</h3><p>Weekly science benchmarks that help students show what they know and help teachers understand where learning goes next.</p><div class="tool-meta"><span>${icon("book")}Grade 5 science</span><span>${icon("clock")}Weekly benchmarks</span></div><div class="tool-card-footer"><a class="text-link" href="/wayman" target="_blank" rel="noopener">Open Wayman benchmarks <span aria-hidden="true">→</span></a><span class="mini-label">2026–2027</span></div></article></div>
       <div class="join-strip"><span class="tool-icon">${icon("link")}</span><div><h3>Have a session link or code?</h3><p>Your facilitator or teacher will share everything you need to begin.</p></div><a href="/coherence" class="text-link">Enter session code <span aria-hidden="true">→</span></a></div>
-      <section class="benchmarks-section" id="benchmarkList"><div class="section-label"><h2>Your weekly benchmarks</h2><span>Wayman Academy of Arts · Grade 5</span></div><div class="benchmark-list"><div class="benchmark-row"><span class="week-number">01</span><div><h3>Science · Benchmark 1</h3><p>Week 1 · 7 questions · Student code required</p></div><span class="pill">First benchmark</span><a href="/benchmark-1" class="button small secondary">Open assessment <span aria-hidden="true">→</span></a></div><div class="benchmark-row future"><span class="week-number">02</span><div><h3>Science · Benchmark 2</h3><p>Your teacher will let you know when it opens.</p></div><span class="pill neutral">Coming soon</span></div><div class="future-weeks">Weeks 3–22 will appear here as your teacher makes them available.</div></div></section>`, "Overview", "assessments");
+      <section class="benchmarks-section" id="benchmarkList"><div class="section-label"><h2>Wayman Academy of Arts</h2><span>Separate student assessment site</span></div><div class="join-strip"><div><h3>Science benchmarks 1–22</h3><p>Students begin with their assigned number and teacher’s name. Available benchmarks can be completed at any time.</p></div><a class="text-link" href="/wayman" target="_blank" rel="noopener">Open Wayman benchmarks ↗</a></div></section>`, "Overview", "assessments");
     if (window.location.hash) requestAnimationFrame(() => document.querySelector(window.location.hash === "#wayman" ? "#wayman" : window.location.hash === "#leadership" ? "#leadership" : "#benchmarkList")?.scrollIntoView());
   }
 
@@ -216,13 +183,7 @@
       authorized = result.authorized;
       if (session.status === "closed") return fail("Your facilitator has closed this session. Contact them if you need to make a change.", "This session has closed.");
       if (session.type === "benchmark" && session.benchmark !== 1) return renderComingSoon();
-      if (portalIdentity?.role === "student" && session.type !== "benchmark") { window.location.replace("/assessments"); return; }
-      if (authorized && session.type === "benchmark" && portalIdentity?.role === "student") {
-        studentCode = portalIdentity.profile.studentCode;
-        teacherName = portalIdentity.profile.teacherName;
-        await loadQuestions();
-        return;
-      }
+      if (session.type === "benchmark") { window.location.replace(`/benchmark-${session.benchmark}`); return; }
       if (authorized && session.type === "leadership") {
         restoreDraft();
         return renderLeadership();

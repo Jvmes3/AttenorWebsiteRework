@@ -19,6 +19,7 @@ const apiRoutes = {
   "/api/logout": require("../api/logout"),
   "/api/session": require("../api/session"),
   "/api/impact-document": require("../api/impact-document"),
+  "/api/wayman": require("../api/wayman"),
   "/api/portal": require("../api/portal"),
   "/api/assessment-session": require("../api/assessment-session"),
   "/api/assessment-access": require("../api/assessment-access"),
@@ -32,7 +33,7 @@ const pageRoutes = {
   "/login": "login.html",
   "/impact": "impact.html",
   "/portal": "portal.html",
-  "/profile": "assessments.html",
+  "/wayman": "wayman.html",
   "/assessments": "assessments.html",
   "/coherence": "assessments.html",
   "/facilitator": "assessments.html",
@@ -53,16 +54,23 @@ const mimeTypes = {
 function publicFile(pathname) {
   const routePath = pathname.replace(/\/$/, "") || "/";
   if (pageRoutes[routePath]) return pageRoutes[routePath];
-  if (/^\/coherence\/[a-z0-9][a-z0-9-]{0,79}$/.test(routePath) || /^\/benchmark-(?:[1-9]|1[0-9]|2[0-2])$/.test(routePath)) return "assessments.html";
+  if (/^\/coherence\/[a-z0-9][a-z0-9-]{0,79}$/.test(routePath)) return "assessments.html";
+  if (/^\/benchmark-(?:[1-9]|1[0-9]|2[0-2])$/.test(routePath)) return "wayman.html";
 
   const cleaned = normalize(pathname).replace(/^[/\\]+/, "");
-  const isRootAsset = ["index.html", "login.html", "impact.html", "assessments.html", "script.js", "login.js", "impact.js", "assessments.js", "portal.html", "portal.js", "portal.css", "styles.css", "assessments.css"].includes(cleaned);
+  const isRootAsset = ["index.html", "login.html", "impact.html", "assessments.html", "script.js", "login.js", "impact.js", "assessments.js", "portal.html", "portal.js", "portal.css", "wayman.html", "wayman.js", "wayman.css", "styles.css", "assessments.css"].includes(cleaned);
   const isPublicDirectory = cleaned.startsWith("assets/") || cleaned.startsWith("resources/");
   return isRootAsset || isPublicDirectory ? cleaned : null;
 }
 
 const server = http.createServer(async (request, response) => {
   const url = new URL(request.url, `http://${request.headers.host || `localhost:${port}`}`);
+  const schoolHost = require("../api/_lib/wayman").isWaymanHost(request);
+  const schoolRedirect = schoolHost && /^\/(?:portal|assessments|profile|facilitator|login|impact|index|coherence)(?:\.html|\/.*)?$/.test(url.pathname);
+  if (schoolRedirect || url.pathname === "/profile") {
+    response.writeHead(302, { Location: schoolHost ? "/" : "/wayman", "Cache-Control": "no-store" });
+    response.end(); return;
+  }
   const apiHandler = apiRoutes[url.pathname];
 
   try {
@@ -72,7 +80,7 @@ const server = http.createServer(async (request, response) => {
       return;
     }
 
-    const relativePath = publicFile(url.pathname);
+    const relativePath = schoolHost && url.pathname === "/" ? "wayman.html" : publicFile(url.pathname);
     if (!relativePath) {
       response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
       response.end("Not found");
@@ -83,7 +91,7 @@ const server = http.createServer(async (request, response) => {
     response.writeHead(200, {
       "Content-Type": mimeTypes[extname(relativePath).toLowerCase()] || "application/octet-stream",
       "Cache-Control": "no-store",
-      ...(["assessments.html", "portal.html"].includes(relativePath) ? { "X-Robots-Tag": "noindex, nofollow, noarchive", "Referrer-Policy": "same-origin" } : {}),
+      ...(["assessments.html", "portal.html", "wayman.html"].includes(relativePath) ? { "X-Robots-Tag": "noindex, nofollow, noarchive", "Referrer-Policy": "same-origin" } : {}),
     });
     response.end(contents);
   } catch (error) {
