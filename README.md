@@ -124,6 +124,9 @@ snapshot in `api/_assets/benchmark-1.json` when the external connection is not c
 Set `WAYMAN_SCHOOL_YEAR=2026-2027` consistently for the entire school year. Change it only when
 opening the next school year. The separate `SUPABASE_URL` and `SUPABASE_SECRET_KEY` settings are
 for Attenor’s existing test/facilitator storage and must not be confused with Ronetta’s project.
+Use the Supabase project API origin (`https://PROJECT_REF.supabase.co`) for `SUPABASE_URL`,
+not a dashboard or table-editor URL. Scope test settings to Preview and `test-production`.
+After a Preview setting changes, publish a new test-branch deployment before checking saves.
 Keep all service credentials out of HTML, browser JavaScript, Git, URLs, and `NEXT_PUBLIC_*` values.
 All functions must share a stable `SESSION_SECRET` of at least 32 random characters.
 
