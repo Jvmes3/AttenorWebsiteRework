@@ -134,11 +134,6 @@
       portalIdentity = await portalRequest();
       if (!portalIdentity.authenticated) { window.location.replace(portalIdentity.waymanEntry ? "/wayman" : `/portal?next=${encodeURIComponent(path)}`); return; }
       updatePortalShell();
-      const result = await api("session?catalog=1");
-      catalog = result.sessions || [];
-      mode = result.mode;
-      const leadershipSession = catalog.find((item) => item.type === "leadership" && item.status === "open");
-      if (leadershipSession) document.querySelector('[data-nav="leadership"]').href = routeFor(leadershipSession);
       if (path === "/profile") { window.location.replace("/wayman"); return; }
       if (path === "/facilitator") return openAdmin();
       if (path === "/coherence") return renderCodeEntry();
@@ -147,6 +142,11 @@
         return /^[a-z0-9][a-z0-9-]{0,79}$/.test(slug) ? openSession(slug) : fail("Please use the complete link from your facilitator.");
       }
       if (/^\/benchmark-(?:[1-9]|1\d|2[0-2])$/.test(path)) { window.location.replace(path); return; }
+      const result = await api("session?catalog=1");
+      catalog = result.sessions || [];
+      mode = result.mode;
+      const leadershipSession = catalog.find((item) => item.type === "leadership" && item.status === "open");
+      if (leadershipSession) document.querySelector('[data-nav="leadership"]').href = routeFor(leadershipSession);
       renderHub();
     } catch (error) {
       if (error.status === 401 || error.status === 403) { window.location.replace("/portal"); return; }
